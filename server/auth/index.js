@@ -1,10 +1,14 @@
 import Router from 'koa-router'
-import controller from './auth.controller.js'
+import passport from 'koa-passport'
+
+import local from './local'
+
+local.setup()
 
 const router = new Router({
   prefix: '/auth'
 })
 
-router.get('/login', controller.login)
+router.use('/local', local.router.routes())
 
 export default router

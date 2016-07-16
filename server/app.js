@@ -1,10 +1,11 @@
 import webpack from 'webpack'
 import koa from 'koa'
 import Router from 'koa-router'
+import bodyparser from 'koa-bodyparser'
 import serve from 'koa-static'
 import convert from 'koa-convert'
 import passport from 'koa-passport'
-import jwt from 'koa-jwt'
+import koajwt from 'koa-jwt'
 import mongoose from 'mongoose'
 
 import webpackDevMiddleware from './middleware/webpackDevMiddleware'
@@ -21,6 +22,8 @@ mongoose.connect(config.mongo.uri, config.mongo.options)
 if (config.mongo.seed) require('./config/seed')
 
 const app = new koa()
+app.use(bodyparser())
+
 const compiler = webpack(webpackConfig)
 
 if (env === 'development') {
@@ -36,11 +39,13 @@ if (env === 'development') {
   app.use(convert(serve('public')))
 }
 
-app.use(jwt({ secret: config.secret, passthrough: true }))//.unless({
-  //path: [/^\/api\/users\/login/]
-//}))//, passthrough: true }))
+app.use(koajwt({ secret: config.secret }).unless({
+  path: ['', '/index.html', '/', /^\/.*\.js$/, /^\/auth\/local/]
+}))
+
 app.use(apiRoutes.routes())
 app.use(authRoutes.routes())
+app.use(passport.initialize())
 
 app.listen(config.koa.port, () => {
   console.log('server listening on port', config.koa.port)
