@@ -11,9 +11,11 @@ function setup() {
     async function (username, password, done) {
       try {
         const user = await User.findOne({ name: username })
-        
         if (!user) return done(null, null, { error: 'Invalid user'})
-        if (password === user.password) return done(null, {_id: user._id, role: user.role})
+
+        const authenticated = await user.authenticate(password)
+        if (authenticated) return done(null, {_id: user._id, role: user.role})
+
         return done(null, null, { error: 'Invalid login' })
       } catch (err) { 
         done(err) 
@@ -30,7 +32,6 @@ const router = new Router()
     } else {
       const token = jwt.sign(user, config.secret)
       ctx.body = { token }
-      return next()
     }
   })(ctx, next))
 

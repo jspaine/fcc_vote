@@ -12,6 +12,7 @@ import webpackDevMiddleware from './middleware/webpackDevMiddleware'
 import webpackConfig from './webpack.client'
 
 import config from './config'
+import seedDb from './config/seed'
 import authRoutes from './auth'
 import apiRoutes from './api'
 
@@ -19,7 +20,7 @@ const env = process.env.NODE_ENV || 'development'
 
 mongoose.Promise = global.Promise
 mongoose.connect(config.mongo.uri, config.mongo.options)
-if (config.mongo.seed) require('./config/seed')
+if (config.mongo.seed) seedDb()
 
 const app = new koa()
 app.use(bodyparser())
