@@ -29,9 +29,8 @@ if (env === 'development') {
   app.use(convert(serve('public')))
 }
 
-app.use(koajwt({ secret: config.secret }).unless({
-  path: ['', '/index.html', '/', /^\/.*\.js$/, /^\/auth\/local/]
-}))
+app.use(koajwt({ secret: config.secret, passthrough: true }))
+  //.unless({ path: ['', '/index.html', '/', /^\/.*\.js$/, /^\/auth\/local/] }))
 
 app.use(apiRoutes.routes())
 app.use(authRoutes.routes())

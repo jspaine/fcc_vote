@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import thenifyAll from 'thenify-all'
 
-const crypt = thenifyAll(bcrypt, {}, ['genSalt', 'hash', 'compare'])
+const crypt = thenifyAll(bcrypt, {}, ['hash', 'compare'])
 
 const {Schema} = mongoose
 const authProviders = ['github']
@@ -28,11 +28,9 @@ UserSchema.path('email')
   }, 'Email can\'t be blank')
 
 UserSchema.pre('save', async function(next) {
-  console.log('pre-save')
   if (this.isModified('password') || this.isNew) {
     try {
-      const salt = await crypt.genSalt()
-      const hash = await crypt.hash(this.password, salt)
+      const hash = await crypt.hash(this.password, 10)
       this.password = hash
     } catch (err) {
       next(err)
