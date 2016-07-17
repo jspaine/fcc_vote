@@ -3,7 +3,7 @@ import path from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import HtmlWebpackTemplate from 'html-webpack-template'
 
-import webpackDevConfig from './config/webpack'
+const devServerPort = 8080
 
 const vendor = ['react', 'react-dom', 'react-hot-loader', 'react-router']
 
@@ -11,7 +11,7 @@ const common = {
   entry: {
     app: [
       'react-hot-loader/patch',
-      path.join(__dirname, '..', 'app', 'app.js')
+      path.join(__dirname, 'app', 'app.js')
     ],
     vendor: [
       'react-hot-loader/patch',
@@ -19,7 +19,7 @@ const common = {
     ]
   },
   output: {
-    path: path.join(__dirname, '..', 'public'),
+    path: path.join(__dirname, 'public'),
     filename: '[name].[hash].js'
   },
   module: {
@@ -45,7 +45,7 @@ const common = {
       template: 'node_modules/html-webpack-template/index.ejs',
       appMountId: 'app',
       inject: false,
-      filename: '../public/index.html'
+      filename: './index.html'
     }),
   ]
 }
@@ -55,7 +55,7 @@ const dev = {
   entry: {
     hot: [
       'react-hot-loader/patch',
-      `webpack-dev-server/client?http://localhost:${webpackDevConfig.port}`,
+      `webpack-dev-server/client?http://localhost:${devServerPort}`,
       'webpack/hot/only-dev-server'
     ],
     ...common.entry
@@ -63,6 +63,15 @@ const dev = {
   output: {
     ...common.output,
     filename: '[name].js'
+  },
+  devServer: {
+    historyApiFallback: true,
+    hot: true,
+    stats: { 
+      colors: true,
+      chunks: false
+    },
+    port: devServerPort
   },
   devtool: 'eval-source-map'
 }

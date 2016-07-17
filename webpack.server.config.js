@@ -48,9 +48,9 @@ const server = {
       'require("source-map-support").install();',
       { raw: true, entryOnly: false }
     ),
-    /*new WatchIgnorePlugin([
+    new WatchIgnorePlugin([
       './app/app.js',
-    ]),*/
+    ]),
   ],
   devtool: 'sourcemap'
 }

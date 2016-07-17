@@ -1,8 +1,6 @@
 import proxy from 'koa-proxy'
-import webpackDevServer from 'webpack-dev-server'
 
-export default function (compiler, options, port) {
-  new webpackDevServer(compiler, options).listen(port)
+export default function (port) {
 
   return function *(next) {
     const path = this.path === '/' ? '/index.html' : this.path

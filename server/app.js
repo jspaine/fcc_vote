@@ -1,4 +1,3 @@
-import webpack from 'webpack'
 import koa from 'koa'
 import Router from 'koa-router'
 import bodyparser from 'koa-bodyparser'
@@ -8,9 +7,8 @@ import passport from 'koa-passport'
 import koajwt from 'koa-jwt'
 import mongoose from 'mongoose'
 
-import webpackDevMiddleware from './middleware/webpackDevMiddleware'
-import webpackConfig from './webpack.client'
-
+import webpackDevProxy from './middleware/webpackDevProxy'
+import webpackClientConfig from '../webpack.client.config'
 import config from './config'
 import seedDb from './config/seed'
 import authRoutes from './auth'
@@ -25,18 +23,9 @@ if (config.mongo.seed) seedDb()
 const app = new koa()
 app.use(bodyparser())
 
-const compiler = webpack(webpackConfig)
-
 if (env === 'development') {
-  app.use(convert(webpackDevMiddleware(
-    compiler, 
-    config.webpack.options, 
-    config.webpack.port
-  )))
+  app.use(convert(webpackDevProxy(webpackClientConfig.devServer.port)))
 } else {
-  compiler.run((err, stats) => {
-    if (err) console.error(err)
-  })
   app.use(convert(serve('public')))
 }
 

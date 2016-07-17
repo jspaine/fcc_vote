@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack && NODE_ENV=production node server/bundle.js",
-    "dev": "webpack --watch --progress --colors & nodemon",
+    "start": "gulp build && NODE_ENV=production node server/bundle.js",
+    "dev": "gulp watch",
     "test": "NODE_ENV=test && node"
   },
   "dependencies": {
@@ -22,6 +22,7 @@
     "co": "^4.6.0",
     "co-body": "^4.2.0",
     "css-loader": "^0.23.1",
+    "gulp": "^3.9.1",
     "html-webpack-plugin": "^2.22.0",
     "html-webpack-template": "^5.0.0",
     "jsonwebtoken": "^7.0.1",
