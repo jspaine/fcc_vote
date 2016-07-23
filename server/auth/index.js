@@ -1,5 +1,4 @@
 import Router from 'koa-router'
-import passport from 'koa-passport'
 
 import local from './local'
 

@@ -4,13 +4,13 @@ import {Strategy as LocalStrategy} from 'passport-local'
 import jwt from 'jsonwebtoken'
 
 import config from '../../config'
-import User from '../../api/user/user.model.js'
+import User from '../../api/user/model'
 
 function setup() {
   passport.use(new LocalStrategy({ session: false }, 
     async function (username, password, done) {
       try {
-        const user = await User.findOne({ name: username })
+        const user = await User.findOne({ username })
         if (!user) return done(null, null, { error: 'Invalid user'})
 
         const authenticated = await user.authenticate(password)
@@ -30,7 +30,7 @@ const router = new Router()
       ctx.status = 401
       ctx.body = info
     } else {
-      const token = jwt.sign(user, config.secret)
+      const token = jwt.sign(user, config.secrets.token)
       ctx.body = { token }
     }
   })(ctx, next))

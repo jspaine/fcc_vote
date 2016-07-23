@@ -1,10 +1,14 @@
 import gulp from 'gulp'
 import webpack from 'webpack'
-import webpackDevServer from 'webpack-dev-server'
-import nodemon from 'nodemon'
 
 import webpackServer from './webpack.server.config'
 import webpackClient from './webpack.client.config'
+
+let webpackDevServer, nodemon
+if (process.env.NODE_ENV !== 'production') {
+  webpackDevServer = require('webpack-dev-server')
+  nodemon = require('nodemon')
+}
 
 gulp.task('build-server', (done) => {
   webpack(webpackServer).run((err, stats) => {

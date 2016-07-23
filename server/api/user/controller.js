@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-import User from './user.model.js'
+import User from './model'
 import config from '../../config'
 
 export default {
@@ -17,7 +17,7 @@ export default {
     const newUser = new User(ctx.request.body)
     newUser.provider = 'local'
     const user = await newUser.save()
-    const token = jwt.sign({ _id: user._id, role: user.role}, config.secret, {
+    const token = jwt.sign({ _id: user._id, role: user.role}, config.secrets.token, {
       expiresIn: 60 * 5
     })
     ctx.body = { token }

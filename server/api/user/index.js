@@ -1,9 +1,11 @@
 import Router from 'koa-router'
-import controller from './user.controller.js'
+
+import controller from './controller'
+import auth from '../../lib/authService'
 
 const router = new Router()
 
-router.get('/', controller.index)
+router.get('/', auth.isAuthenticated, controller.index)
 router.post('/', controller.create)
 router.get('/me', controller.me)
 router.put('/:id/password', controller.update)

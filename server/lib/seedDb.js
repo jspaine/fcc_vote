@@ -1,22 +1,19 @@
-import User from '../api/user/user.model.js'
+import User from '../api/user/model'
 
 export default async () => {
-  //await User.find({}).remove()
+  await User.find({}).remove()
   
   const users = await User.count()
   if (!users) await User.create({
-    name: 'test',
+    username: 'test',
     email: 'test@test.com',
     password: '1234',
     provider: 'local'
   }, {
-    name: 'admin',
+    username: 'admin',
     email: 'admin@test.com',
     password: 'admin',
     role: 'admin',
     provider: 'local'
-  }, {
-    name: 'githubUser',
-    provider: 'github'
   })
 }
