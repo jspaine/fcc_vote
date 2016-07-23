@@ -55,6 +55,6 @@ gulp.task('build', ['build-server', 'build-client'])
 gulp.task('watch', ['watch-server', 'watch-client'], () => {
   nodemon({
     watch: 'server/bundle.js',
-    exec: "node ./server/bundle.js"
-  }).on('restart', () => console.log('server restarting'))
+    exec: "node ./server/bundle.js & NODE_ENV=test mocha-webpack --watch"
+  }).on('restart', () => console.log('restarting server'))
 })

@@ -23,10 +23,10 @@ if (config.db.seed) seedDb()
 const app = new koa()
 app.use(bodyparser())
 
-if (env === 'development') {
-  app.use(convert(webpackDevProxy(webpackClientConfig.devServer.port)))
-} else {
+if (env === 'production') {
   app.use(convert(serve('public')))
+} else {
+  app.use(convert(webpackDevProxy(webpackClientConfig.devServer.port)))
 }
 
 app.use(koajwt({ secret: config.secrets.token, passthrough: true }))
@@ -35,8 +35,10 @@ app.use(passport.initialize())
 app.use(authRoutes.routes())
 app.use(apiRoutes.routes())
 
-app.listen(config.koa.port, () => {
-  console.log('server listening on port', config.koa.port)
-})
+if (env !== 'test') {
+  app.listen(config.port, () => {
+    console.log('server listening on port', config.port)
+  })
+}
 
 export default app
