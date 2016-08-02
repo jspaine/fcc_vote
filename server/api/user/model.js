@@ -8,41 +8,40 @@ const {Schema} = mongoose
 const authProviders = ['github']
 
 const UserSchema = new Schema({
-  username: String,
+  username: {
+    type: String,
+    unique: true
+  },
   email: {
     type: String,
-    lowercase: true
+    lowercase: true,
+    default: null,
+    unique: true
   },
   role: {
     type: String,
     default: 'user'
   },
   password: String,
-  provider: String,
-  salt: String
+  provider: String
 })
 
 UserSchema.path('email')
   .validate(function(email) {
-    return authProviders.find(p => p === this.provider) ? true : email.length
+    if (authProviders.find(p => p === this.provider)) return true 
+    return email && email.length
   }, 'Email can\'t be blank')
 
 UserSchema.pre('save', async function(next) {
   if (this.isModified('password') || this.isNew) {
-    try {
-      const hash = await crypt.hash(this.password, 10)
-      this.password = hash
-    } catch (err) {
-      next(err)
-    }
+    const hash = await crypt.hash(this.password, 10)
+    this.password = hash
   }
   next()
 })
 
-UserSchema.methods = {
-  authenticate: async function(password) {
-    return await crypt.compare(password, this.password)
-  }
-}
+UserSchema.method('authenticate', async function(password) {
+  return await crypt.compare(password, this.password)
+})
 
 export default mongoose.model('User', UserSchema)

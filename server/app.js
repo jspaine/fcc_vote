@@ -1,4 +1,4 @@
-import koa from 'koa'
+import Koa from 'koa'
 import Router from 'koa-router'
 import bodyparser from 'koa-bodyparser'
 import serve from 'koa-static'
@@ -19,8 +19,20 @@ const env = process.env.NODE_ENV || 'development'
 mongoose.Promise = global.Promise
 mongoose.connect(config.db.uri, config.db.options)
 if (config.db.seed) seedDb()
+//if (env === 'test') mongoose.set('debug', true)
 
-const app = new koa()
+const app = new Koa()
+if (env !== 'production') 
+  app.use(async (ctx, next) => {
+    try {
+      await next()
+    } catch (err) {
+      ctx.status = err.status || 500
+      ctx.body = err.message
+      //ctx.app.emit('error', err, ctx)
+    }
+  })
+
 app.use(bodyparser())
 
 if (env === 'production') {

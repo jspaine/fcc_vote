@@ -23,7 +23,7 @@ export default {
     ctx.body = { token }
   },
 
-  remove: async (ctx) => {
+  del: async (ctx) => {
     await User.findOneAndRemove({ _id: ctx.params.id })
   },
 
