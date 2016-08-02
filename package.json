@@ -6,7 +6,7 @@
   "scripts": {
     "start": "gulp build && NODE_ENV=production node server/bundle.js",
     "dev": "gulp watch",
-    "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.server.test.config.js 'server/**/*.spec.js'"
+    "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.server.test.config.js"
   },
   "dependencies": {
     "babel-core": "^6.10.4",
@@ -50,12 +50,17 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "inject-loader": "^2.0.1",
     "koa-proxy": "^0.6.0",
     "mocha": "^2.5.3",
     "mocha-webpack": "^0.5.0",
     "node-inspector": "^0.12.8",
     "nodemon": "^1.9.2",
+    "sinon": "^1.17.5",
+    "sinon-chai": "^2.8.0",
     "supertest": "^1.2.0",
+    "supertest-as-promised": "^3.2.0",
     "webpack-dev-server": "^1.14.1"
   },
   "keywords": [],

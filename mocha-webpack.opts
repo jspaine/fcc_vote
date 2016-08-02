@@ -1,3 +1,4 @@
 --require source-map-support/register
 --webpack-config webpack.server.test.config.js
+--include server/lib/testHelpers
 server/**/*.spec.js
