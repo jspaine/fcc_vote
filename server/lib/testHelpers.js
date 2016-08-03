@@ -3,6 +3,7 @@ import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 import chaiAsPromised from 'chai-as-promised'
+import 'sinon-as-promised'
 import supertest from 'supertest-as-promised'
 
 import config from '../config'

@@ -10,7 +10,7 @@ const testUser = new User({
   provider: 'local'
 })
 
-describe('auth routes', function() {
+describe('Auth api', function() {
 
   describe('local auth', function() {
     before(async function() {

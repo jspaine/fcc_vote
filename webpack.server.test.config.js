@@ -16,5 +16,5 @@ module.exports = {
     __filename: false
   },
   externals: [nodeExternals()],
-  devtool: 'sourcemap'
+  devtool: 'source-map'
 }

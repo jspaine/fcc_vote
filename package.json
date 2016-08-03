@@ -60,6 +60,7 @@
     "node-inspector": "^0.12.8",
     "nodemon": "^1.9.2",
     "sinon": "^1.17.5",
+    "sinon-as-promised": "^4.0.2",
     "sinon-chai": "^2.8.0",
     "supertest": "^1.2.0",
     "supertest-as-promised": "^3.2.0",
