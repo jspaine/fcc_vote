@@ -7,7 +7,7 @@ const crypt = thenifyAll(bcrypt, {}, ['hash', 'compare'])
 const {Schema} = mongoose
 const authProviders = ['github']
 
-const UserSchema = new Schema({
+export const UserSchema = new Schema({
   username: {
     type: String,
     unique: true
@@ -22,7 +22,10 @@ const UserSchema = new Schema({
     type: String,
     default: 'user'
   },
-  password: String,
+  password: {
+    type: String,
+    select: false
+  },
   provider: String
 })
 

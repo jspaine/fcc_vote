@@ -11,6 +11,7 @@ function setup() {
     async function (username, password, done) {
       try {
         const user = await User.findOne({ username })
+          .select('+password')
         if (!user) return done(null, null, { error: 'Invalid user'})
 
         const authenticated = await user.authenticate(password)
