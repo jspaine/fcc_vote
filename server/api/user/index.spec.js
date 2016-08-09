@@ -1,20 +1,6 @@
 import injector from 'inject!./index'
 
-const routerStub = {
-  get: sinon.spy(),
-  put: sinon.spy(),
-  del: sinon.spy(),
-  post: sinon.spy()
-}
-
-const RouterStub = sinon.spy(function() { return routerStub })
-
-const authStub = {
-  isAuthenticated: 'authService.isAuthenticated',
-  hasRole(role) {
-    return `authService.hasRole(${role})`
-  }
-}
+import {routerStub, RouterStub, authStub} from '../../lib/testStubs'
 
 const controllerStub = {
   index: 'controller.index',

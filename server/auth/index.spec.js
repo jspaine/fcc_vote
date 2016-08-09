@@ -1,16 +1,8 @@
 import injector from 'inject!./index'
 
-const routerStub = {
-  get: sinon.spy(),
-  put: sinon.spy(),
-  del: sinon.spy(),
-  post: sinon.spy(),
-  use: sinon.spy()
-}
+import {routerStub, RouterStub} from '../lib/testStubs'
 
-const RouterStub = sinon.spy(function() { return routerStub })
-
-const provider = {
+const authProvider = {
   setup: sinon.spy(),
   router: {
     routes: function() {}
@@ -19,7 +11,7 @@ const provider = {
 
 const router = injector({
   'koa-router': RouterStub,
-  './local': provider
+  './local': authProvider
 }).default
 
 describe('Auth router', function() {
@@ -35,7 +27,7 @@ describe('Auth router', function() {
 
   it('routes /auth/local', function() {
     expect(routerStub.use).to.have.been
-      .calledWith('/local', provider.router.routes())
+      .calledWith('/local', authProvider.router.routes())
   })
 
 })
