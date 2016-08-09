@@ -78,25 +78,25 @@ describe('User controller', function() {
     await controller.del(ctx)
     expect(UserStub.findOneAndRemove)
       .to.have.been.calledWith({_id: 1234})
-    expect(ctx.status).to.equal(401)
+    expect(ctx.status).to.equal(403)
   })
 
   it('shows current user', async function() {
     const ctx = {
-      state: {
-        user: {_id: 1234}
-      }
+      state: { user: {_id: 1234} }
     }
     await controller.me(ctx)
     expect(UserStub.findOne)
       .to.have.been.calledWith({_id: 1234})
+    
     expect(ctx)
       .to.have.deep.property('body.username', 'a user')
   })
 
   it('shows a specific user', async function() {
     const ctx = {
-      params: {_id: 1234}
+      params: {id: 1234},
+      state: { user: {_id: 1234} }
     }
     await controller.show(ctx)
     expect(UserStub.findOne)
@@ -107,10 +107,9 @@ describe('User controller', function() {
 
   it('changes a users password', async function() {
     const ctx = {
-      params: {_id: 1234},
-      request: {
-        body: {password: 'password'}
-      }
+      params: {id: 1234},
+      request: { body: {password: 'password'} },
+      state: { user: {_id: 1234} }
     }
     await controller.update(ctx)
     expect(UserStub.findOne)

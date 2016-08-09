@@ -33,6 +33,13 @@ describe('User api', function() {
     await saveUser(testUser)
   })
 
+  it('doesn\'t save a duplicate user', async function() {
+    await saveUser(testUser)
+    await request.post('/api/users')
+      .send(testUser)
+      .expect(500)
+  })
+
   it('doesn\'t show user list if unauthorized', async function() {
     await request.get('/api/users') 
       .expect(401)
@@ -67,7 +74,7 @@ describe('User api', function() {
     const {id} = await saveUser({...testUser, username: 'test2', email: 'test@2.com'})
     await request.delete(`/api/users/${id}`)
       .set('Authorization', `Bearer ${token}`)
-      .expect(401)
+      .expect(403)
   })
 
   it('admin can delete other users', async function() {
@@ -81,9 +88,9 @@ describe('User api', function() {
 })
 
 async function saveUser(user) {
-  return await request.post('/api/users')
+  const res = await request.post('/api/users')
     .send(user)
     .expect(200)
     .expect('Content-Type', /json/)
-    .then(res => JSON.parse(res.text))
+  return res.body
 }

@@ -10,32 +10,40 @@ export default {
   },
 
   show: async (ctx) => {
-    ctx.body = await User.findOne({ _id: ctx.params.id })
+    if (ownOrAdmin(ctx.params, ctx.state.user))
+      ctx.body = await User.findOne({ _id: ctx.params.id })
+    else
+      ctx.status = 403
   },
 
   create: async (ctx) => {
     const newUser = new User(ctx.request.body)
     newUser.provider = 'local'
 
-    const user = await newUser.save()
-    const token = jwt.sign({ _id: user._id, role: user.role}, config.secrets.token, {
-      expiresIn: 60 * 5
-    })
+    try {
+      const user = await newUser.save()
+      const token = jwt.sign({ _id: user._id, role: user.role}, config.secrets.token, {
+        expiresIn: 60 * 5
+      })
 
-    ctx.body = { 
-      id: user._id,
-      token 
+      ctx.body = { 
+        id: user._id,
+        token 
+      }
+    } catch (err) {
+      ctx.status = 500
+      if (err.code === 11000) {
+        ctx.body = {error: 'duplicate key'}
+      }
     }
   },
 
   del: async (ctx) => {
-    const {user} = ctx.state
-
-    if (user.role === 'admin' || user._id === ctx.params.id) {
+    if (ownOrAdmin(ctx.params, ctx.state.user)) {
       await User.findOneAndRemove({ _id: ctx.params.id })
       ctx.status = 200
     } else {
-      ctx.status = 401
+      ctx.status = 403
     }
   },
 
@@ -45,10 +53,17 @@ export default {
   },
 
   update: async (ctx) => {
-    const user = await User.findOne({ _id: ctx.params.id })
-    user.password = ctx.request.body.password
-
-    await user.save()
-    ctx.status = 200
+    if (ownOrAdmin(ctx.params, ctx.state.user)) {
+      const user = await User.findOne({ _id: ctx.params.id })
+      user.password = ctx.request.body.password
+      await user.save()
+      ctx.status = 200
+    } else {
+      ctx.status = 403
+    }
   }
+}
+
+function ownOrAdmin(target, user) {
+  return user.role === 'admin' || user._id === target.id
 }
