@@ -3,7 +3,7 @@ import Vote from '../vote/model'
 
 export default {
   index: async (ctx) => {
-    const polls = await Poll.find().populate('owner').lean()
+    const polls = await Poll.find().populate('owner', 'username').lean()
     ctx.body = await Promise.all(polls.map(async (poll) => {
       return {
         ...poll,
@@ -35,13 +35,13 @@ export default {
     const poll = await Poll.findOne({_id: ctx.params.id})
     const {user} = ctx.state
     const {body} = ctx.request
-    
+
     poll.title = body.title
     poll.description = body.description
     poll.updated = Date.now()
     poll.options = body.options
-    
-    if (user.role === 'admin' || 
+
+    if (user.role === 'admin' ||
         user._id === poll.owner.toString()) {
       await poll.save()
       ctx.status = 200
@@ -53,7 +53,7 @@ export default {
   del: async (ctx) => {
     const poll = await Poll.findOne({_id: ctx.params.id})
     const {user} = ctx.state
-    if (user.role === 'admin' || 
+    if (user.role === 'admin' ||
         user._id === poll.owner.toString()) {
       await Poll.findOneAndRemove({_id: ctx.params.id})
       ctx.status = 200
