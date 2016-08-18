@@ -17,14 +17,15 @@ const config = {
   },
   secrets: {
     token: 'koa-vote'
-  }
+  },
+  useCookie: false
 }
 
 switch (process.env.NODE_ENV) {
   case 'test':
     merge(config, test)
     break
-  case 'production': 
+  case 'production':
     merge(config, prod)
     break
   default: merge(config, dev)

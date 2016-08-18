@@ -1,5 +1,6 @@
 import app from '../../app'
 import User from './model'
+import config from '../../config'
 
 const request = supertest.agent(app.listen())
 
@@ -19,7 +20,7 @@ const testAdmin = {
 }
 
 describe('User api', function() {
-  before(async function() { 
+  before(async function() {
     await initDb()
   })
   afterEach(async function() {
@@ -28,7 +29,7 @@ describe('User api', function() {
   after(async function() {
     await resetDb()
   })
-  
+
   it('saves a new user', async function() {
     await saveUser(testUser)
   })
@@ -41,7 +42,7 @@ describe('User api', function() {
   })
 
   it('doesn\'t show user list if unauthorized', async function() {
-    await request.get('/api/users') 
+    await request.get('/api/users')
       .expect(401)
   })
 
@@ -55,7 +56,6 @@ describe('User api', function() {
 
   it('shows user list to admin', async function() {
     const {token} = await saveUser(testAdmin)
-
     await request.get('/api/users')
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
@@ -85,6 +85,22 @@ describe('User api', function() {
       .expect(200)
   })
 
+  if (config.useCookie) {
+    it('uses cookies to access protected resource', async function() {
+      await saveUser(testAdmin)
+
+      const loginRes = await request.post('/auth/local')
+        .send({
+          username: 'admin',
+          password: 'admin'
+        })
+      const cookies = loginRes.headers['set-cookie'].map(cookie => cookie.split(';')[0])
+
+      await request.get('/api/users')
+        .set('Cookie', cookies.join('; '))
+        .expect(200)
+    })
+  }
 })
 
 async function saveUser(user) {

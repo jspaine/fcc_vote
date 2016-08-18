@@ -22,30 +22,40 @@ if (config.db.seed) seedDb()
 //if (env === 'test') mongoose.set('debug', true)
 
 const app = new Koa()
-if (env !== 'production') 
+if (env !== 'production')
   app.use(async (ctx, next) => {
     try {
       await next()
     } catch (err) {
       ctx.status = err.status || 500
       ctx.body = err.message
-      //ctx.app.emit('error', err, ctx)
+      ctx.app.emit('error', err, ctx)
     }
   })
 
 app.use(bodyparser())
 
-if (env === 'production') {
-  app.use(convert(serve('public')))
-} else {
-  app.use(convert(webpackDevProxy(webpackClientConfig.devServer.port)))
-}
-
-app.use(koajwt({ secret: config.secrets.token, passthrough: true }))
+app.use(koajwt({
+  secret: config.secrets.token,
+  passthrough: true,
+  cookie: 'token'
+}))
 
 app.use(passport.initialize())
 app.use(authRoutes.routes())
 app.use(apiRoutes.routes())
+
+app.use(async (ctx, next) => {
+  if (!ctx.path.match(/\.js(?:on)?$|\.html$|\.(?:s)?css$|\.map$|\.ico$/))
+    ctx.path = '/'
+  await next()
+})
+
+if (env === 'production') {
+  app.use(serve('public'))
+} else {
+  app.use(convert(webpackDevProxy(webpackClientConfig.devServer.port)))
+}
 
 if (env !== 'test') {
   app.listen(config.port, () => {
