@@ -22,13 +22,11 @@ export default {
 
     try {
       const user = await newUser.save()
-      const token = jwt.sign({ _id: user._id, role: user.role}, config.secrets.token, {
-        expiresIn: 60 * 5
-      })
+      const token = jwt.sign({ _id: user._id, role: user.role}, config.secrets.token)
 
-      ctx.body = { 
+      ctx.body = {
         id: user._id,
-        token 
+        token
       }
     } catch (err) {
       ctx.status = 500
