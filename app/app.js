@@ -7,7 +7,16 @@ import Router from './Router';
 
 const root = document.getElementById('app')
 
-render(<Router />)
+if (__DEVELOPMENT__) {
+  const RedBox = require('redbox-react').default
+  try {
+    render(<Router />, root)
+  } catch (err) {
+    render(<RedBox error={err} />, root)
+  }
+} else {
+  render(<Router />)
+}
 
 if (__DEVELOPMENT__ && module.hot) {
   module.hot.accept('./Router', () => {
