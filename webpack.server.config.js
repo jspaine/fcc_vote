@@ -5,14 +5,14 @@ import merge from 'webpack-merge'
 
 import packageJSON from './package.json'
 
-const { 
-  dependencies = {}, 
-  devDependencies = {}, 
-  peerDependencies = {}, 
-  optionalDependencies = {} 
+const {
+  dependencies = {},
+  devDependencies = {},
+  peerDependencies = {},
+  optionalDependencies = {}
 } = packageJSON
 
-const dependencyNames = Array.from(new Set([ 
+const dependencyNames = Array.from(new Set([
   ...Object.keys(dependencies),
   ...Object.keys(devDependencies),
   ...Object.keys(peerDependencies),
