@@ -7,7 +7,7 @@ import config from '../../config'
 import User from '../../api/user/model'
 
 function setup() {
-  passport.use(new LocalStrategy({ session: false }, 
+  passport.use(new LocalStrategy({ session: false },
     async function (username, password, done) {
       try {
         const user = await User.findOne({ username })
@@ -15,11 +15,11 @@ function setup() {
         if (!user) return done(null, null, { error: 'Invalid user'})
 
         const authenticated = await user.authenticate(password)
-        if (authenticated) return done(null, {_id: user._id, role: user.role})
+        if (authenticated) return done(null, {_id: user._id, role: user.role, username})
 
         return done(null, null, { error: 'Invalid login' })
-      } catch (err) { 
-        done(err) 
+      } catch (err) {
+        done(err)
       }
     }
   ))
@@ -32,7 +32,15 @@ const router = new Router()
       ctx.body = info
     } else {
       const token = jwt.sign(user, config.secrets.token)
-      ctx.body = { token }
+      const decoded = jwt.decode(token)
+      ctx.body = {
+        username: user.username,
+        token,
+        ...decoded
+      }
+      if (config.useCookie) {
+        ctx.cookies.set('token', token)
+      }
     }
   })(ctx, next))
 
