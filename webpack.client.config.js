@@ -86,7 +86,8 @@ const dev = {
   },
   output: {
     ...common.output,
-    filename: '[name].js'
+    filename: '[name].js',
+    devtoolModuleFilenameTemplate: '/[absolute-resource-path]'
   },
   devServer: {
     historyApiFallback: true,

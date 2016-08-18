@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Input} from 'react-toolbox/lib/input'
 import {Button} from 'react-toolbox/lib/button'
+import {FontIcon} from 'react-toolbox/lib/font_icon'
 
 import {loginRequest} from 'store/modules/auth'
 
@@ -9,7 +10,8 @@ import styles from './Login.scss'
 
 class Login extends React.Component {
   static propTypes = {
-    onLogin: React.PropTypes.func
+    onLogin: React.PropTypes.func,
+    error: React.PropTypes.object
   }
   constructor(props) {
     super(props)
@@ -24,10 +26,11 @@ class Login extends React.Component {
   }
 
   render() {
+    const {error, onLogin} = this.props
     return (
       <div className={styles.loginForm}>
         <h3>Login</h3>
-        <form action="auth/local" method="POST" onSubmit={ev => this.props.onLogin(ev, this.state)}>
+        <form action="auth/local" method="POST" onSubmit={ev => onLogin(ev, this.state)}>
           <div>
             <Input
               type="text"
@@ -47,7 +50,13 @@ class Login extends React.Component {
               onChange={this.handleChange.bind(this, 'password')}
             />
           </div>
-          <div>
+          <span className={styles.error}>
+            {error && (error.status === 401 ?
+              'Invalid login' :
+              'An error occurred')}
+            <FontIcon className={styles.icon} value="error" />
+          </span>
+          <div className={styles.button}>
             <Button type="submit" raised primary>
               Log In
             </Button>
@@ -59,7 +68,9 @@ class Login extends React.Component {
 }
 
 export default connect(
-  null,
+  state => ({
+    error: state.auth.loginError
+  }),
   dispatch => ({
     onLogin: (ev, data) => {
       ev.preventDefault()

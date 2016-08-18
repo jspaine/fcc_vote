@@ -4,14 +4,15 @@ import {Button} from 'react-toolbox/lib/button'
 
 import PollCard from 'components/pollCard/PollCard'
 import {loadRequest} from 'store/modules/polls'
+import style from './Home.scss'
 
 const stateToProps = state => ({
   polls: state.polls.data
 })
 
-const dispatchToProps = dispatch => ({
-  loadPolls: () => dispatch(loadRequest())
-})
+const dispatchToProps = {
+  loadPolls: loadRequest
+}
 
 class Home extends React.Component {
   componentDidMount() {
@@ -19,7 +20,7 @@ class Home extends React.Component {
   }
   render() {
     return (
-      <div style={{display: 'flex'}}>
+      <div className={style.pollList}>
         {this.props.polls && this.props.polls.map(poll =>
           <PollCard poll={poll} key={poll._id} />
         )}

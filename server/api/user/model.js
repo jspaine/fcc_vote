@@ -26,12 +26,15 @@ export const UserSchema = new Schema({
     type: String,
     select: false
   },
+  image: {
+    type: String
+  },
   provider: String
 })
 
 UserSchema.path('email')
   .validate(function(email) {
-    if (authProviders.find(p => p === this.provider)) return true 
+    if (authProviders.find(p => p === this.provider)) return true
     return email && email.length
   }, 'Email can\'t be blank')
 

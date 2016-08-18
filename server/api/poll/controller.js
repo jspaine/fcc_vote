@@ -3,7 +3,10 @@ import Vote from '../vote/model'
 
 export default {
   index: async (ctx) => {
-    const polls = await Poll.find().populate('owner', 'username').lean()
+    const polls = await Poll.find().populate('owner', {
+      username: true,
+      image: true
+    }).lean()
     ctx.body = await Promise.all(polls.map(async (poll) => {
       return {
         ...poll,

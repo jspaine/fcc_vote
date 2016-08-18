@@ -26,18 +26,21 @@ async function seedUsers() {
     username: 'test',
     email: 'test@test.com',
     password: '1234',
-    provider: 'local'
+    provider: 'local',
+    image: 'http://placeimg.com/64/64/animals'
   }, {
     username: 'another',
     email: 'an@other.com',
     password: 'abcd',
-    provider: 'local'
+    provider: 'local',
+    image: 'http://placeimg.com/64/64/tech'
   }, {
     username: 'admin',
     email: 'admin@test.com',
     password: 'admin',
     role: 'admin',
-    provider: 'local'
+    provider: 'local',
+    image: 'http://placeimg.com/64/64/people'
   })
 }
 
@@ -46,7 +49,7 @@ async function seedPolls() {
   const user1 = await User.findOne({username: 'test'})
   const user2 = await User.findOne({username: 'another'})
   const user3 = await User.findOne({username: 'admin'})
-  
+
   if (!polls) await Poll.create({
     title: 'Best Soda',
     description: 'Irn bru 4 lyfe',
@@ -64,20 +67,30 @@ async function seedPolls() {
       {title: 'Hell yeah'},
       {title: 'What?'}
     ]
+  }, {
+    title: 'Some really long title, probably much longer than it should be',
+    description: 'Do I really need a description for this stuff?',
+    owner: user2,
+    options: [
+      {title: 'What if the option titles are really long as well as the poll title?'},
+      {title: 'Another title'}
+    ]
   })
 }
 
 async function seedVotes() {
   const votes = await Vote.count()
-  
+
   const poll1 = await Poll.findOne({title: 'Best Soda'})
   const poll2 = await Poll
     .findOne({title: 'Is this site great'})
-  
+  const poll3 = await Poll
+    .findOne({title: 'Some really long title, probably much longer than it should be'})
+
   const user1 = await User.findOne({username: 'test'})
   const user2 = await User.findOne({username: 'another'})
   const user3 = await User.findOne({username: 'admin'})
-  
+
   if (!votes) {
     await Vote.create({
       poll: poll1,
@@ -104,7 +117,11 @@ async function seedVotes() {
       poll: poll2,
       option: poll2.options[1]._id,
       user: user2
+    }, {
+      poll: poll3,
+      option: poll3.options[0]._id,
+      user: user1
     })
   }
-  
+
 }

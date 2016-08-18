@@ -15,7 +15,12 @@ function setup() {
         if (!user) return done(null, null, { error: 'Invalid user'})
 
         const authenticated = await user.authenticate(password)
-        if (authenticated) return done(null, {_id: user._id, role: user.role, username})
+        if (authenticated) return done(null, {
+          _id: user._id,
+          role: user.role,
+          image: user.image,
+          username,
+        })
 
         return done(null, null, { error: 'Invalid login' })
       } catch (err) {
@@ -35,6 +40,7 @@ const router = new Router()
       const decoded = jwt.decode(token)
       ctx.body = {
         username: user.username,
+        image: user.image,
         token,
         ...decoded
       }
