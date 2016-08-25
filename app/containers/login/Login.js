@@ -6,13 +6,22 @@ import {FontIcon} from 'react-toolbox/lib/font_icon'
 
 import {loginRequest} from 'store/modules/auth'
 
-import styles from './Login.scss'
+import style from './Login.scss'
+
+const stateToProps = state => ({
+  error: state.auth.loginError
+})
+
+const dispatchToProps = dispatch => ({
+  onLogin: (ev, data) => {
+    ev.preventDefault()
+    if (data.username.trim() !== '' &&
+        data.password.trim() !== '')
+      return dispatch(loginRequest(data))
+  }
+})
 
 class Login extends React.Component {
-  static propTypes = {
-    onLogin: React.PropTypes.func,
-    error: React.PropTypes.object
-  }
   constructor(props) {
     super(props)
     this.state = {
@@ -28,35 +37,33 @@ class Login extends React.Component {
   render() {
     const {error, onLogin} = this.props
     return (
-      <div className={styles.loginForm}>
+      <div className={style.loginForm}>
         <h3>Login</h3>
-        <form action="auth/local" method="POST" onSubmit={ev => onLogin(ev, this.state)}>
-          <div>
-            <Input
-              type="text"
-              label="username"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleChange.bind(this, 'username')}
-              autoFocus
-            />
-          </div>
-          <div>
-            <Input
-              type="password"
-              label="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange.bind(this, 'password')}
-            />
-          </div>
-          <span className={styles.error}>
-            {error && (error.status === 401 ?
-              'Invalid login' :
-              'An error occurred')}
-            <FontIcon className={styles.icon} value="error" />
-          </span>
-          <div className={styles.button}>
+        <form action="/auth/local" method="POST" onSubmit={ev => onLogin(ev, this.state)}>
+          <Input
+            type="text"
+            label="username"
+            name="username"
+            value={this.state.username}
+            onChange={this.handleChange.bind(this, 'username')}
+            autoFocus
+          />
+          <Input
+            type="password"
+            label="password"
+            name="password"
+            value={this.state.password}
+            onChange={this.handleChange.bind(this, 'password')}
+          />
+          {error &&
+            <span className={style.error}>
+              {error.status === 401 ?
+                'Invalid login' :
+                'An error occurred'}
+              <FontIcon className={style.icon} value="error" />
+            </span>
+          }
+          <div className={style.button}>
             <Button type="submit" raised primary>
               Log In
             </Button>
@@ -65,18 +72,10 @@ class Login extends React.Component {
       </div>
     )
   }
+  static propTypes = {
+    onLogin: React.PropTypes.func,
+    error: React.PropTypes.object
+  }
 }
 
-export default connect(
-  state => ({
-    error: state.auth.loginError
-  }),
-  dispatch => ({
-    onLogin: (ev, data) => {
-      ev.preventDefault()
-      if (data.username.trim() !== '' &&
-          data.password.trim() !== '')
-        return dispatch(loginRequest(data))
-    }
-  })
-)(Login)
+export default connect(stateToProps, dispatchToProps)(Login)

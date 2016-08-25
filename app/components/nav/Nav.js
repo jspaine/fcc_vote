@@ -6,14 +6,14 @@ import {Navigation} from 'react-toolbox/lib/navigation'
 import {IconButton} from 'react-toolbox/lib/button'
 
 import LinkStyle from 'react-toolbox/lib/link/theme.scss'
-import styles from './Nav.scss'
+import style from './Nav.scss'
 
-const Nav = ({user, logoutClick, menuButtonClick}) =>
-  <AppBar className={styles.appBar} className={styles.fixed} fixed>
+const Nav = ({user, menuButtonClick}) =>
+  <AppBar className={style.appBar} className={style.fixed} fixed>
     <Link to="/">
       Vote!
     </Link>
-    <Navigation className={styles.nav} type="horizontal">
+    <Navigation className={style.nav} type="horizontal">
       {user ?
         <IconButton
           inverse icon='more_vert'
