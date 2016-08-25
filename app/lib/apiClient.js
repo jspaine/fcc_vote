@@ -22,7 +22,7 @@ export default new class {
       ...this.defaultParams[method],
       ...params
     }
-    if (data) params.body = encodeBody(data)
+    if (data) params.body = JSON.stringify(data)
     params.method = method.toUpperCase()
 
     return Observable.fromPromise(
@@ -73,14 +73,7 @@ function initDefaultParams(method) {
   if (method === 'post' || method === 'put' ||
       method === 'patch') {
     headers['Content-Type'] =
-      'application/x-www-form-urlencoded'
+      'application/json'
   }
   return {headers}
-}
-
-function encodeBody(data) {
-  const parts = Object.keys(data).map(key =>
-    `${key}=${encodeURIComponent(data[key])}`
-  )
-  return parts.join('&')
 }

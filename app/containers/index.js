@@ -1,3 +1,5 @@
 export Home from './home/Home'
 export App from './app/App'
 export Login from './login/Login'
+export EditPoll from './editPoll/EditPoll'
+export ShowPoll from './showPoll/ShowPoll'

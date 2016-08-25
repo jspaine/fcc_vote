@@ -2,35 +2,27 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {reduxForm, Field, FieldArray} from 'redux-form'
 import {Button, IconButton} from 'react-toolbox/lib/button'
-import {Input} from 'react-toolbox/lib/input'
 import {Card, CardTitle, CardActions} from 'react-toolbox/lib/card'
 
+import {saveRequest} from 'store/modules/polls'
+import RTField from 'components/RTField'
+import validate from './validate'
 import style from './EditPoll.scss'
 
-const RTField = field =>
-  <div>
-    <Input
-      {...field.input}
-      label={field.label}
-      error={field.meta.touched && field.meta.error &&
-             field.meta.error}
-    />
-  </div>
-
-const renderOptions = ({fields}) =>
+const RenderOptions = ({fields}) =>
   <ul>
     <li className={style.fieldListItem}>
       <Button
         type="button"
         label="Add Option"
         accent
-        onClick={() => fields.push('')}
+        onClick={() => fields.push({title: ''})}
       />
     </li>
     {fields.map((option, index) =>
       <li className={style.fieldListItem} key={index}>
         <Field
-          name={option}
+          name={`${option}.title`}
           label={`Option ${index + 1}`}
           type="text"
           component={RTField}
@@ -48,7 +40,7 @@ const renderOptions = ({fields}) =>
     )}
   </ul>
 
-const EditPoll = () =>
+const EditPoll = ({initialValues, handleSubmit, onSubmit}) =>
   <Card>
     <CardTitle title="New Poll"></CardTitle>
     <form action="/api/polls" method="POST">
@@ -66,14 +58,14 @@ const EditPoll = () =>
             component={RTField}
             type="text"
           />
-          <Button type="submit" raised primary>
+          <Button type="submit" onClick={handleSubmit(onSubmit)} raised primary>
             Ok
           </Button>
         </div>
         <div className={style.formCol}>
           <FieldArray
             name="options"
-            component={renderOptions}
+            component={RenderOptions}
           />
         </div>
       </div>
@@ -88,28 +80,11 @@ const WithForm = reduxForm({
 export default connect(
   state => ({
     initialValues: {
-      options: ['','']
-    }
+      options: [{title: ''},{title: ''}]
+    },
+    saving: state.polls.saving
+  }),
+  dispatch => ({
+    onSubmit: data => dispatch(saveRequest(data))
   })
 )(WithForm)
-
-function validate (values) {
-  const errors = {
-    options: []
-  }
-  if (!values.title || !values.title.trim()) {
-    errors.title = 'Title is required'
-  }
-  const emptyOptions = findEmpty(values.options)
-  if (values.options.length - emptyOptions.length < 2) {
-    errors.options[emptyOptions[0]] =
-      'At least two options are required'
-  }
-  return errors
-}
-
-function findEmpty(arr) {
-  return arr.reduce((acc, x, i) =>
-    (!x || x.trim() === '') ? acc.concat(i) : acc
-  , [])
-}

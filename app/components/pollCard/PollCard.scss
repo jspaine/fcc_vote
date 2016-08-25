@@ -1,10 +1,55 @@
-.card {
-  margin: 2rem;
+@import "~react-toolbox/lib/colors";
+
+.card[data-react-toolbox="card"] {
+  margin: 2rem auto;
   max-width: 350px;
+  &.large {
+    max-width: 85%;
+  }
 }
 
-.cardText {
-  border-bottom: 1px solid #aaa;
+.cardSubText {
   text-align: right;
   font-size: 1.2rem;
+  color: $palette-grey-500;
+}
+
+.cardTitle {
+  [data-react-toolbox="avatar"] {
+    min-width: 40px;
+  }
+}
+
+.cardBody {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  div {
+    margin: 2rem;
+  }
+}
+
+.cardChart {
+  flex-shrink: 1;
+  flex-grow: 1;
+  max-width: 380px;
+}
+
+.cardTable {
+  flex-shrink: 1;
+  flex-grow: 10;
+  max-width: 350px;
+  margin-top: 2rem;
+}
+
+.cardVotes {
+  max-width: 350px;
+  flex-grow: 10;
+}
+
+hr {
+  border-bottom: 1px solid $palette-grey-300;
+  width: 90%;
+  margin: 0 auto;
 }

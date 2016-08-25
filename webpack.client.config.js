@@ -9,7 +9,8 @@ const devServerPort = 8080
 
 const vendor = ['babel-polyfill', 'whatwg-fetch', 'rxjs', 'react',
   'react-dom', 'react-toolbox', 'react-router',  'react-router-redux',
-  'redux', 'redux-thunk', 'react-redux', 'redux-form', 'redux-observable']
+  'redux', 'redux-thunk', 'react-redux', 'redux-form',
+  'redux-observable', 'd3', 'react-faux-dom']
 
 const common = {
   entry: {

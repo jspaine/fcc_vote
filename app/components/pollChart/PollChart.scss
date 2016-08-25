@@ -1,0 +1,35 @@
+@import "~react-toolbox/lib/colors";
+
+.axis {
+  font-size: 1.2rem;
+  color: $palette-grey-800;
+  shape-rendering: crispEdges;
+}
+
+.axis path,
+line {
+  stroke: $palette-grey-800;
+}
+
+.axis text {
+  fill: $palette-grey-800;
+}
+
+.bar {
+  shape-rendering: crispEdges;
+}
+
+foreignObject div {
+  text-align: center;
+}
+
+.barLabel {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $palette-grey-900;
+  text-shadow:
+    -1px -1px 1px rgba(255,255,255,0.9),
+    1px -1px 1px rgba(255,255,255,0.9),
+    -1px 1px 1px rgba(255,255,255,0.9),
+    1px 1px 1px rgba(255,255,255,0.9);
+}

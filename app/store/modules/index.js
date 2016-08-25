@@ -5,13 +5,21 @@ import {reducer as form} from 'redux-form'
 
 import auth, {loginEpic} from './auth'
 
-import polls, {loadPollsEpic} from './polls'
+import polls, {
+  loadPollsEpic,
+  savePollEpic
+} from './polls'
+
+import votes, {
+  loadVotesEpic
+} from './votes'
 
 import ui from './ui'
 
 export const rootReducer = combineReducers({
   auth,
   polls,
+  votes,
   ui,
   routing,
   form
@@ -19,5 +27,7 @@ export const rootReducer = combineReducers({
 
 export const rootEpic = combineEpics(
   loginEpic,
-  loadPollsEpic
+  loadPollsEpic,
+  savePollEpic,
+  loadVotesEpic
 )

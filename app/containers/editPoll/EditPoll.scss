@@ -1,0 +1,39 @@
+@import "~react-toolbox/lib/colors";
+
+.card[data-react-toolbox="card"] {
+  width: 85%;
+  margin: 0 auto;
+}
+
+form {
+  margin: 2.4rem;
+  width: 85%;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.formCol {
+  width: 100px;
+  margin: 10px 20px;
+  flex-grow: 1;
+}
+
+.button {
+  margin-top: 10px;
+}
+
+.fieldListItem {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  div {
+    flex-grow: 10;
+  }
+}
+
+

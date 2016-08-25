@@ -7,7 +7,9 @@ import createStore from 'store'
 import {
   App,
   Home,
-  Login
+  Login,
+  EditPoll,
+  ShowPoll
 } from 'containers'
 
 const store = createStore(browserHistory)
@@ -18,8 +20,10 @@ export default function() {
     <Provider store={store}>
       <Router history={history}>
         <Route path="/" component={App}>
-          <IndexRoute component={Home}/>
-          <Route path="login" component={Login}/>
+          <IndexRoute component={Home} />
+          <Route path="login" component={Login} />
+          <Route path="polls/new" component={EditPoll} />
+          <Route path="polls/:id" component={ShowPoll} />
         </Route>
       </Router>
     </Provider>
