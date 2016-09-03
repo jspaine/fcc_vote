@@ -1,113 +1,179 @@
 import {Observable} from 'rxjs/Observable'
 import {push} from 'react-router-redux'
+import {denormalize} from 'denormalizr'
 
 import api from '../../lib/apiClient'
+import * as schema from '../schema'
 
-const LOAD_REQUEST = 'polls/LOAD_REQUEST'
-const LOAD_SUCCESS = 'polls/LOAD_SUCCESS'
-const LOAD_FAILURE = 'polls/LOAD_FAILURE'
+const LOAD_POLLS_REQUEST = 'polls/LOAD_POLLS_REQUEST'
+export const LOAD_POLLS_SUCCESS = 'polls/LOAD_POLLS_SUCCESS'
+const LOAD_POLLS_FAILURE = 'polls/LOAD_POLLS_FAILURE'
 
-const SAVE_REQUEST = 'polls/SAVE_REQUEST'
-const SAVE_SUCCESS = 'polls/SAVE_SUCCESS'
-const SAVE_FAILURE = 'polls/SAVE_FAILURE'
+const SAVE_POLL_REQUEST = 'polls/SAVE_POLL_REQUEST'
+export const SAVE_POLL_SUCCESS = 'polls/SAVE_POLL_SUCCESS'
+const SAVE_POLL_FAILURE = 'polls/SAVE_POLL_FAILURE'
+
+const DELETE_POLL_REQUEST = 'polls/DELETE_POLL_REQUEST'
+export const DELETE_POLL_SUCCESS = 'polls/DELETE_POLL_SUCCESS'
+const DELETE_POLL_FAILURE = 'polls/DELETE_POLL_FAILURE'
 
 const initialState = {
-  loaded: false
+  ids: new Set
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_REQUEST:
+    case LOAD_POLLS_REQUEST:
+    case SAVE_POLL_REQUEST:
+    case DELETE_POLL_REQUEST:
       return {
         ...state,
-        loaded: false,
-        loading: true,
+        pending: true,
         error: null,
       }
-    case LOAD_SUCCESS:
+    case LOAD_POLLS_SUCCESS:
       return {
         ...state,
-        loading: false,
-        loaded: true,
-        data: action.data
+        pending: false,
+        ids: new Set([
+          ...state.ids,
+          ...action.result
+        ])
       }
-    case LOAD_FAILURE:
+    case SAVE_POLL_SUCCESS:
       return {
         ...state,
-        loading: false,
-        error: action.error
+        pending: false,
+        ids: new Set([
+          action.result,
+          ...state.ids
+        ])
       }
-    case SAVE_REQUEST:
+    case DELETE_POLL_SUCCESS:
       return {
         ...state,
-        saving: true,
-        error: null,
+        pending: false,
+        ids: new Set(
+          [...state.ids].filter(id => id !== action.result)
+        )
       }
-    case SAVE_SUCCESS:
+    case LOAD_POLLS_FAILURE:
+    case SAVE_POLL_FAILURE:
+    case DELETE_POLL_FAILURE:
       return {
         ...state,
-        saving: false,
-        data: action.data
-      }
-    case SAVE_FAILURE:
-      return {
-        ...state,
-        saving: false,
+        pending: false,
         error: action.error
       }
     default: return state
   }
 }
 
-export const loadRequest = () => ({
-  type: LOAD_REQUEST
+export const loadPollsRequest = () => ({
+  type: LOAD_POLLS_REQUEST
 })
 
-export const loadSuccess = (data) => ({
-  type: LOAD_SUCCESS,
-  data
-})
+const loadPollsSuccess = (response) => {
+  const {entities, result} = response
+  return {
+    type: LOAD_POLLS_SUCCESS,
+    entities,
+    result
+  }
+}
 
-export const loadFailure = (error) => ({
-  type: LOAD_FAILURE,
+const loadPollsFailure = (error) => ({
+  type: LOAD_POLLS_FAILURE,
   error
 })
 
-export const saveRequest = (data, id) => ({
-  type: SAVE_REQUEST,
-  data,
+export const savePollRequest = (poll) => ({
+  type: SAVE_POLL_REQUEST,
+  poll
+})
+
+const savePollSuccess = (response) => {
+  const {entities, result} = response
+  return {
+    type: SAVE_POLL_SUCCESS,
+    entities,
+    result
+  }
+}
+
+const savePollFailure = (error) => ({
+  type: SAVE_POLL_FAILURE,
+  error
+})
+
+export const deletePollRequest = (id) => ({
+  type: DELETE_POLL_REQUEST,
   id
 })
 
-export const saveSuccess = (data) => ({
-  type: SAVE_SUCCESS,
-  data
-})
+const deletePollSuccess = (response) => {
+  const {result} = response
+  return {
+    type: DELETE_POLL_SUCCESS,
+    result
+  }
+}
 
-export const saveFailure = (error) => ({
-  type: SAVE_FAILURE,
+const deletePollFailure = (error) => ({
+  type: DELETE_POLL_FAILURE,
   error
 })
 
 export const loadPollsEpic = action$ =>
-  action$.ofType(LOAD_REQUEST)
-    .mergeMap(action => {
-      return api.get('api/polls')
-        .map(loadSuccess)
-        .catch(err => Observable.of(loadFailure(err)))
-    })
+  action$.ofType(LOAD_POLLS_REQUEST)
+    .mergeMap(action =>
+      api.get('api/polls', {
+        schema: schema.arrayOfPolls
+      })
+        .map(loadPollsSuccess)
+        .catch(err => Observable.of(loadPollsFailure(err)))
+    )
 
  export const savePollEpic = action$ =>
-  action$.ofType(SAVE_REQUEST)
+  action$.ofType(SAVE_POLL_REQUEST)
     .mergeMap(action => {
-      if (action.id) {
-        return api.put(`api/polls/${action.id}`, {
-          data: action.data
-        }).map(data => push(`/polls/${data._id}`))
-        .catch(err => Observable.of(saveFailure(err)))
+      if (action.poll._id) {
+        return api.put(`api/polls/${action.poll._id}`, {
+          data: action.poll,
+          schema: schema.poll
+        })
+          .map(data => {
+            push(`/polls/${data.result}`)
+            return savePollSuccess(data)
+          })
+          .catch(err => Observable.of(savePollFailure(err)))
       }
       return api.post('api/polls', {
-        data: action.data
-      }).map(data => push(`/polls/${data._id}`))
-        .catch(err => Observable.of(saveFailure(err)))
+        data: action.poll,
+        schema: schema.poll
+      })
+        .map(data => {
+          push(`/polls/${data.result}`)
+          return savePollSuccess(data)
+        })
+        .catch(err => Observable.of(savePollFailure(err)))
     })
+
+export const deletePollEpic = action$ =>
+  action$.ofType(DELETE_POLL_REQUEST)
+    .mergeMap(action =>
+      api.del(`api/polls/${action.id}`, {
+        schema: schema.poll
+      })
+        .map(deletePollSuccess)
+        .catch(err => Observable.of(deletePollFailure(err)))
+    )
+
+
+export const getAllPolls = (polls, entities) =>
+  denormalize([...polls.ids], entities, schema.arrayOfPolls)
+
+export const getPollById = (id, entities) =>
+  denormalize(id, entities, schema.poll)
+
+export const getIsPending = (state) => state.pending

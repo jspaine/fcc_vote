@@ -4,15 +4,16 @@ import {push} from 'react-router-redux'
 import {Button} from 'react-toolbox/lib/button'
 
 import PollCard from 'components/pollCard/PollCard'
-import {loadRequest} from 'store/modules/polls'
+import {loadPollsRequest} from 'store/modules/polls'
+import {selectors} from 'store/modules'
 import style from './Home.scss'
 
 const stateToProps = state => ({
-  polls: state.polls.data
+  polls: selectors.getAllPolls(state)
 })
 
 const dispatchToProps = dispatch => ({
-  loadPolls: () => dispatch(loadRequest()),
+  loadPolls: () => dispatch(loadPollsRequest()),
   showPoll: (id) => dispatch(push(`/polls/${id}`))
 })
 

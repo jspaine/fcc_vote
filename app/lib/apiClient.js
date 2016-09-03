@@ -1,3 +1,4 @@
+import {normalize} from 'normalizr'
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/fromPromise'
 
@@ -17,7 +18,7 @@ export default new class {
     }
   }
 
-  request(method, path, {params, data} = {}) {
+  request(method, path, {params, data, schema} = {}) {
     params = {
       ...this.defaultParams[method],
       ...params
@@ -26,20 +27,25 @@ export default new class {
     params.method = method.toUpperCase()
 
     return Observable.fromPromise(
-      fetch(`${urlRoot}${path}`, params).then(res => {
-        if (!res.ok) throw res
-        if (params.headers &&
-            params.headers['Accept'] === 'application/json') {
-          return res.json()
-        } else {
-          return res.text()
-        }
-      }).catch(err => {
-        throw {
-          status: err.status,
-          text: err.statusText
-        }
-      })
+      fetch(`${urlRoot}${path}`, params)
+        .then(res => {
+          if (!res.ok) throw res
+          if (params.headers &&
+              params.headers['Accept'] === 'application/json') {
+            return res.json()
+          } else {
+            return res.text()
+          }
+        })
+        .then(res => {
+          return schema ? normalize(res, schema) : res
+        })
+        .catch(err => {
+          throw {
+            status: err.status,
+            text: err.statusText
+          }
+        })
     )
   }
 

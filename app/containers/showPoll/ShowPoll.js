@@ -3,20 +3,21 @@ import {connect} from 'react-redux'
 import {Button, IconButton} from 'react-toolbox/lib/button'
 import {ProgressBar} from 'react-toolbox/lib/progress_bar'
 
-import {loadRequest as loadPolls} from 'store/modules/polls'
-import {loadRequest as loadVotes} from 'store/modules/votes'
+import {loadPollsRequest} from 'store/modules/polls'
+import {loadVotesRequest} from 'store/modules/votes'
+import {selectors} from 'store/modules'
 import PollCard from 'components/pollCard/PollCard'
 
 const stateToProps = (state) => ({
-  polls: state.polls.data,
-  votes: state.votes.data,
-  pollLoading: state.polls.loading,
-  votesLoading: state.votes.loading
+  polls: selectors.getAllPolls(state),
+  votes: selectors.getAllVotes(state),
+  pollsLoading: selectors.getPollsPending(state),
+  votesLoading: selectors.getVotesPending(state)
 })
 
 const dispatchToProps = (dispatch) => ({
-  loadPolls: () => dispatch(loadPolls()),
-  loadVotes: (id) => dispatch(loadVotes(id))
+  loadPolls: () => dispatch(loadPollsRequest()),
+  loadVotes: (id) => dispatch(loadVotesRequest(id))
 })
 
 class ShowPoll extends React.Component{
@@ -43,7 +44,7 @@ class ShowPoll extends React.Component{
   render() {
     return (
       <div>
-        {this.props.loading &&
+        {this.props.pollsLoading &&
           <ProgressBar type="circular" mode="indeterminate" />
         }
         {this.poll &&
@@ -61,7 +62,7 @@ class ShowPoll extends React.Component{
   static propTypes = {
     polls: PropTypes.array,
     loading: PropTypes.bool,
-    loadPolls: PropTypes.func.isRequired
+    loadPolls: PropTypes.func
   }
 }
 

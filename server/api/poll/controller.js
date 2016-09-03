@@ -46,7 +46,8 @@ export default {
 
     if (user.role === 'admin' ||
         user._id === poll.owner.toString()) {
-      await poll.save()
+      const updatedPoll = await poll.save()
+      ctx.body = updatedPoll
       ctx.status = 200
     } else {
       ctx.status = 403
@@ -59,6 +60,7 @@ export default {
     if (user.role === 'admin' ||
         user._id === poll.owner.toString()) {
       await Poll.findOneAndRemove({_id: ctx.params.id})
+      ctx.body = poll
       ctx.status = 200
     } else {
       ctx.status = 403
