@@ -19,7 +19,7 @@ gulp.task('build-server', (done) => {
   })
 })
 
-gulp.task('build-client', (done) => {
+gulp.task('build-client', ['build-server'], (done) => {
   webpack(webpackClient).run((err, stats) => {
     if (err) console.error(err)
     else console.log(stats.toString())
@@ -45,13 +45,14 @@ gulp.task('watch-server', (done) => {
   })
 })
 
-gulp.task('watch-client', () => {
+gulp.task('watch-client', ['watch-server'], () => {
   const compiler = webpack(webpackClient)
   new webpackDevServer(compiler, webpackClient.devServer)
-    .listen(webpackClient.devServer.port)
-  new Server({
-    configFile: __dirname + '/karma.conf.js'
-  }).start()
+    .listen(webpackClient.devServer.port, () => {
+      // new Server({
+      //   configFile: __dirname + '/karma.conf.js'
+      // }).start()
+    })
 })
 
 gulp.task('build', ['build-server', 'build-client'])
@@ -59,6 +60,6 @@ gulp.task('build', ['build-server', 'build-client'])
 gulp.task('watch', ['watch-server', 'watch-client'], () => {
   nodemon({
     watch: 'server/bundle.js',
-    exec: "node ./server/bundle.js & NODE_ENV=test mocha-webpack --watch"
+    exec: "node ./server/bundle.js & NODE_ENV=test mocha-webpack"
   }).on('restart', () => console.log('restarting server'))
 })
