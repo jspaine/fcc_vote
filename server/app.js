@@ -46,11 +46,9 @@ app.use(authRoutes.routes())
 app.use(apiRoutes.routes())
 
 app.use(async (ctx, next) => {
-  if (!ctx.path.match(/\.js(?:on)?$|\.html$|\.(?:s)?css$|\.map$|\.ico$/))
+  if (!ctx.path.match(/\.js(?:on)?$|\.html$|\.(?:s)?css$|\.map$|\.ico$/)) {
+    console.log(ctx.path, ' -> /')
     ctx.path = '/'
-  if (ctx.path.match(/\/*\/*/)) {
-    const split = ctx.path.split('/')
-    ctx.path = '/' + split[split.length - 1]
   }
   await next()
 })

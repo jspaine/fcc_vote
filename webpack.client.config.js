@@ -23,6 +23,7 @@ const common = {
   },
   output: {
     path: path.join(__dirname, 'public'),
+    publicPath: '/',
     filename: '[name].[hash].js'
   },
   module: {
