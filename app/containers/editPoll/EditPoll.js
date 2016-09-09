@@ -4,7 +4,7 @@ import {reduxForm, Field, FieldArray} from 'redux-form'
 import {Button, IconButton} from 'react-toolbox/lib/button'
 import {Card, CardTitle, CardActions} from 'react-toolbox/lib/card'
 
-import {saveRequest} from 'store/modules/polls'
+import {savePollRequest} from 'store/modules/polls'
 import RTField from 'components/RTField'
 import validate from './validate'
 import style from './EditPoll.scss'
@@ -82,7 +82,7 @@ export default connect(
     initialValues: {
       options: [{title: ''},{title: ''}]
     },
-    saving: state.polls.saving
+    saving: state.polls.pending
   }),
   dispatch => ({
     onSubmit: data => dispatch(saveRequest(data))
