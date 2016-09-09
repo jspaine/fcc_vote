@@ -9,7 +9,7 @@ const LOAD_VOTES_SUCCESS = 'votes/LOAD_VOTES_SUCCESS'
 const LOAD_VOTES_FAILURE = 'votes/LOAD_VOTES_FAILURE'
 
 const SAVE_VOTE_REQUEST = 'votes/SAVE_VOTE_REQUEST'
-const SAVE_VOTE_SUCCESS = 'votes/SAVE_VOTE_SUCCESS'
+export const SAVE_VOTE_SUCCESS = 'votes/SAVE_VOTE_SUCCESS'
 const SAVE_VOTE_FAILURE = 'votes/SAVE_VOTE_FAILURE'
 
 const initialState = {
@@ -26,13 +26,21 @@ export default (state = initialState, action) => {
         error: null
       }
     case LOAD_VOTES_SUCCESS:
-    case SAVE_VOTE_SUCCESS:
       return {
         ...state,
         pending: false,
         ids: new Set([
           ...state.ids,
           ...action.result
+        ])
+      }
+    case SAVE_VOTE_SUCCESS:
+      return {
+        ...state,
+        pending: false,
+        ids: new Set([
+          ...state.ids,
+          action.result
         ])
       }
     case LOAD_VOTES_FAILURE:
@@ -89,7 +97,7 @@ const saveVoteFailure = (error) => ({
 export const loadVotesEpic = action$ =>
   action$.ofType(LOAD_VOTES_REQUEST)
     .mergeMap(action =>
-      api.get(`api/polls/${action.pollId}/vote`, {
+      api.get(`api/polls/${action.pollId}/votes`, {
         schema: schema.arrayOfVotes
       })
         .map(loadVotesSuccess)
@@ -100,9 +108,9 @@ export const saveVoteEpic = action$ =>
   action$.ofType(SAVE_VOTE_REQUEST)
     .mergeMap(action =>
       api.post(
-        `api/polls/${action.pollId}/vote/${action.optionId}`,
+        `api/polls/${action.pollId}/votes/${action.optionId}`,
         {
-          schema: schema.vote
+          data: {}, schema: schema.vote
         })
         .map(saveVoteSuccess)
         .catch(err => Observable.of(saveVoteFailure(err)))
@@ -111,12 +119,20 @@ export const saveVoteEpic = action$ =>
 export const getAllVotes = (votes, entities) =>
   denormalize([...votes.ids], entities, schema.arrayOfVotes)
 
-export const getIsPending = (state) => state.pending
-
-export const getCanVote = (votes, userId, pollId) => {
-  const votesForPoll = votes.filter(v => v.poll === pollId)
-  if (!votesForPoll.find(v => v.user === userId)) {
-    return true
-  }
-  return false
+export const getPollVotes = (pollId, votes, entities) => {
+  const pollVotes = [...votes.ids].filter(v =>
+    entities.votes[v] && entities.votes[v].poll === pollId
+  )
+  return denormalize(pollVotes, entities, schema.arrayOfVotes)
 }
+
+export const getCanVote = (userId, pollId, votes, entities) => {
+  const pollVotes = [...votes.ids].filter(v =>
+    entities.votes[v] && entities.votes[v].poll === pollId
+  )
+  return pollVotes.reduce((acc, v) =>
+    (!acc || entities.votes[v].user === userId) ? false : acc
+  , true)
+}
+
+export const getIsPending = (state) => state.pending

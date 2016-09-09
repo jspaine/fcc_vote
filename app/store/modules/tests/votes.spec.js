@@ -58,7 +58,7 @@ describe('votes reducer', function() {
         response: ['-a|', {
           a: response
         }],
-        fetchArgs: ['api/polls/pid/vote']
+        fetchArgs: ['api/polls/pid/votes']
       })
     })
 
@@ -78,8 +78,51 @@ describe('votes reducer', function() {
         response: ['-a|', {
           a: response
         }],
-        fetchArgs: ['api/polls/pid/vote/oid']
+        fetchArgs: ['api/polls/pid/votes/oid']
       })
+    })
+  })
+
+  describe('vote selectors', function() {
+    const votes = {ids: new Set(['1', '2'])}
+    const entities = {
+      polls: {
+        '1': {_id: '1', title: 'poll 1', owner: '1', options: ['1', '2']},
+        '2': {_id: '2', title: 'poll 2', owner: '1', options: ['3','4']}
+      },
+      users: {
+        '1': {_id: '1', username: 'user 1'},
+        '2': {_id: '2', username: 'user 2'}
+      },
+      options: {
+        '1': {_id: '1', title: 'option 1'},
+        '2': {_id: '2', title: 'option 2'},
+        '3': {_id: '3', title: 'option 3'},
+        '4': {_id: '4', title: 'option 4'},
+      },
+      votes: {
+        '1': {_id: '1', poll: '1', option: '1', user: '1'},
+        '2': {_id: '2', poll: '2', option: '3', user: '1'}
+      }
+    }
+
+    it('gets all votes', function() {
+      const result = fromVotes.getAllVotes(votes, entities)
+      expect(result.length).to.equal(2)
+      expect(result[0]).to.have.deep.property('option.title', 'option 1')
+    })
+
+    it('gets poll votes', function() {
+      const result = fromVotes.getPollVotes('1', votes, entities)
+      expect(result.length).to.equal(1)
+      expect(result[0]).to.have.deep.property('poll.title', 'poll 1')
+    })
+
+    it('gets can vote', function() {
+      const user1 = fromVotes.getCanVote('1', '1', votes, entities)
+      const user2 = fromVotes.getCanVote('2', '1', votes, entities)
+      expect(user1).to.be.false
+      expect(user2).to.be.true
     })
   })
 })

@@ -173,7 +173,9 @@ export const deletePollEpic = action$ =>
 export const getAllPolls = (polls, entities) =>
   denormalize([...polls.ids], entities, schema.arrayOfPolls)
 
-export const getPollById = (id, entities) =>
-  denormalize(id, entities, schema.poll)
+export const getPollById = (id, polls, entities) => {
+  if (!polls.ids.has(id)) return
+  return denormalize(id, entities, schema.poll)
+}
 
 export const getIsPending = (state) => state.pending

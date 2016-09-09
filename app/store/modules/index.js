@@ -29,6 +29,7 @@ export const rootEpic = combineEpics(
   fromPolls.savePollEpic,
   fromPolls.deletePollEpic,
   fromVotes.loadVotesEpic,
+  fromVotes.saveVoteEpic,
   fromUsers.loadUsersEpic,
   fromUsers.saveUserEpic,
   fromUsers.deleteUserEpic
@@ -38,16 +39,26 @@ export const selectors = {
   getAllPolls(state) {
     return fromPolls.getAllPolls(state.polls, state.entities)
   },
-  getPollById(state) {
-    return function(id) {
-      return fromPolls.getPollById(id, state.entities)
-    }
+  getPollById(state, id) {
+    return fromPolls.getPollById(id, state.polls, state.entities)
   },
   getPollsPending(state) {
     return fromPolls.getIsPending(state.polls)
   },
   getAllVotes(state) {
     return fromVotes.getAllVotes(state.votes, state.entities)
+  },
+  getPollVotes(state, pollId) {
+    return fromVotes.getPollVotes(pollId, state.votes, state.entities)
+  },
+  getPollTotalVotes(state, pollId) {
+    const poll = state.entities.polls[pollId]
+    console.log('pollTotal', poll)
+    return poll.options
+      .reduce((acc, o) => acc + o.votes, 0)
+  },
+  getCanVote(state, userId, pollId) {
+    return fromVotes.getCanVote(userId, pollId, state.votes, state.entities)
   },
   getVotesPending(state) {
     return fromVotes.getIsPending(state.votes)

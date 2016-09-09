@@ -11,6 +11,6 @@ router.get('/:id', controller.show)
 router.post('/', auth.isAuthenticated, controller.create)
 router.put('/:id', auth.isAuthenticated, controller.update)
 router.del('/:id', auth.isAuthenticated, controller.del)
-router.use('/:pid/vote', vote.routes())
+router.use('/:pid/votes', vote.routes())
 
 export default router

@@ -35,7 +35,6 @@ export default (state = initialState, action) => {
         loginError: action.error
       }
     case LOGOUT:
-      localStorage.removeItem('user')
       return {
         ...state,
         user: null
@@ -49,18 +48,19 @@ export const loginRequest = (data) => ({
   data
 })
 
-export const loginSuccess = (user) => ({
+const loginSuccess = (user) => ({
   type: LOGIN_SUCCESS,
   user
 })
 
-export const loginFailure = (error) => ({
+const loginFailure = (error) => ({
   type: LOGIN_FAILURE,
   error
 })
 
 export const logout = () => {
   api.removeDefaultHeader('Authorization')
+  localStorage.removeItem('user')
   return {
     type: LOGOUT
   }

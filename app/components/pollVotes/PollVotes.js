@@ -11,7 +11,7 @@ const PollVotes = ({poll, votes, votesLoading}) =>
     <ul className={style.voteList}>
       {votes && votes.map(vote =>
         <li key={vote.user._id}>
-          <span>{vote.user.username} voted </span>
+          <span>{vote.user.username} voted for </span>
           <span>{getTitle(poll.options, vote)} </span>
           <span>{moment(vote.at).fromNow()}</span>
         </li>
@@ -29,6 +29,6 @@ export default PollVotes
 
 function getTitle(options, vote) {
   if (!options || !vote.option) return
-  const res = options.find (o => o._id === vote.option)
+  const res = options.find(o => o._id === vote.option._id)
   if(res) return res.title
 }

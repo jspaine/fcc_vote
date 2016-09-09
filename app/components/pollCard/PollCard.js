@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react'
 import {Card, CardTitle, CardText, CardActions} from 'react-toolbox/lib/card'
 
-
 import PollTable from 'components/pollTable/PollTable'
 import PollChart from 'components/pollChart/PollChart'
 import PollVotes from 'components/pollVotes/PollVotes'
@@ -20,18 +19,21 @@ const colors = [
 ]
 
 class PollCard extends React.Component {
-  //= ({poll, onPollClick, large, votes, votesLoading}) => {
-
-  componentWillMount() {
-    if (this.props.large) {
-      this.props.loadVotes(this.props.poll._id)
-    }
-  }
 
   render() {
-    const {poll, onPollClick, large, votes, votesLoading} = this.props
-    const totalVotes = poll.options
-      .reduce((acc, o) => acc + o.votes, 0)
+    const {
+      poll,
+      onPollClick,
+      large,
+      votes,
+      canVote,
+      saveVote,
+      votesLoading,
+      userId
+    } = this.props
+
+    const totalVotes = poll.options ?
+      poll.options.reduce((acc, o) => acc + o.votes, 0) : 0
     const cardStyle = large ? style.card + ' ' + style.large : style.card
     return (
       <Card
@@ -48,28 +50,35 @@ class PollCard extends React.Component {
 
         {large ?
           <div className={style.cardBody}>
-            <Card className={style.cardChart}>
-              <PollChart
-                options={poll.options}
-                total={totalVotes}
-                colors={colors}
-              />
-            </Card>
-            <Card className={style.cardTable}>
+            {totalVotes > 0 &&
+              <div className={style.cardChart}>
+                <PollChart
+                  options={poll.options}
+                  total={totalVotes}
+                  colors={colors}
+                />
+              </div>
+            }
+            <div className={style.cardTable}>
               <PollTable
                 options={poll.options}
                 totalVotes={totalVotes}
                 colors={colors}
+                large={large}
+                canVote={canVote}
+                saveVote={saveVote}
+                votes={votes}
+                userId={userId}
               />
-            </Card>
-            {totalVotes &&
-              <Card className={style.cardVotes}>
+            </div>
+            {totalVotes > 0 &&
+              <div className={style.cardVotes}>
                 <PollVotes
                   poll={poll}
                   votes={votes}
                   votesLoading={votesLoading}
                 />
-              </Card>
+              </div>
             }
           </div> :
           <div className={style.cardBody}>
@@ -91,9 +100,8 @@ PollCard.propTypes = {
   poll: PropTypes.object.isRequired,
   onPollClick: PropTypes.func,
   large: PropTypes.bool,
-  votes: PropTypes.array,
-  votesLoading: PropTypes.bool,
-  loadVotes: PropTypes.func
+  otes: PropTypes.array,
+  votesLoading: PropTypes.bool
 }
 
 export default PollCard

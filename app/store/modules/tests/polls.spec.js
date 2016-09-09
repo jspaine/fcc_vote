@@ -167,22 +167,22 @@ describe('polls reducer', function() {
   })
 
   describe('poll selectors', function() {
-    const polls = {ids: ['1', '2']}
-      const entities = {
-        polls: {
-          '1': {_id: '1', title: 'poll 1', owner: '1', options: ['1', '2']},
-          '2': {_id: '2', title: 'poll 2', owner: '1', options: ['3','4']}
-        },
-        users: {
-          '1': {_id: '1', username: 'user 1'}
-        },
-        options: {
-          '1': {_id: '1', title: 'option 1'},
-          '2': {_id: '2', title: 'option 2'},
-          '3': {_id: '3', title: 'option 3'},
-          '4': {_id: '4', title: 'option 4'},
-        }
+    const polls = {ids: new Set(['1', '2'])}
+    const entities = {
+      polls: {
+        '1': {_id: '1', title: 'poll 1', owner: '1', options: ['1', '2']},
+        '2': {_id: '2', title: 'poll 2', owner: '1', options: ['3','4']}
+      },
+      users: {
+        '1': {_id: '1', username: 'user 1'}
+      },
+      options: {
+        '1': {_id: '1', title: 'option 1'},
+        '2': {_id: '2', title: 'option 2'},
+        '3': {_id: '3', title: 'option 3'},
+        '4': {_id: '4', title: 'option 4'},
       }
+    }
 
     it('getAllPolls returns denormalized list of polls', function() {
       const result = fromPolls.getAllPolls(polls, entities)
@@ -191,7 +191,7 @@ describe('polls reducer', function() {
     })
 
     it('getPollById returns denormalized poll', function() {
-      const result = fromPolls.getPollById('1', entities)
+      const result = fromPolls.getPollById('1', polls, entities)
       expect(result).to.have.deep.property('owner.username', 'user 1')
       expect(result.options.length).to.equal(2)
       expect(result.options[0].title).to.equal('option 1')
