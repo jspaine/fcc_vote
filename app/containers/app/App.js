@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {push} from 'react-router-redux'
-import {Layout, Panel} from 'react-toolbox'
+import {Layout, Panel} from 'react-toolbox/lib/layout'
 
 import {openDrawer} from 'store/modules/ui'
 
