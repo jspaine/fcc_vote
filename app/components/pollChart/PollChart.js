@@ -39,9 +39,9 @@ class PollChart extends React.Component {
     const maxVotes = max(options.map(option =>
           option.votes || 0))
     const optionTitles = options.map(option => option.title)
-    const margin = {top: 20, right: 20, bottom: 50, left: 40}
-    const width = 400 - margin.left - margin.right
-    const height = 300 - margin.top - margin.bottom
+    const margin = {top: 10, right: 0, bottom: 50, left: 50}
+    const width = 300 - margin.left - margin.right
+    const height = 200 - margin.top - margin.bottom
 
     const x = scaleBand()
       .rangeRound([0, width])
@@ -81,6 +81,12 @@ class PollChart extends React.Component {
     svg.append('g')
       .attr('class', `${style.y} ${style.axis}`)
       .call(yAxis)
+      .append('g')
+        .attr('transform', 'translate(-20,70)')
+        .append('text')
+          .attr('text-anchor', 'middle')
+          .attr('transform', 'rotate(-90)')
+          .text('Votes')
 
     const bars = svg.selectAll('.bar')
       .data(options)
@@ -101,7 +107,11 @@ class PollChart extends React.Component {
         .attr('class', style.barLabel)
         .append('xhtml:div')
           .attr('color', 'white')
-          .html((d) => Math.round(d.votes / total * 100) + '%')
+          .html((d) => {
+            return d.votes > 0 ?
+            Math.round(d.votes / total * 100) + '%' :
+            ''
+          })
 
 
     return el
