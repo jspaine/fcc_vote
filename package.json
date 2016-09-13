@@ -83,6 +83,7 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "enzyme": "^2.4.1",
+    "eslint": "^3.5.0",
     "eslint-plugin-react": "^6.1.2",
     "fetch-mock": "^5.1.1",
     "inject-loader": "^2.0.1",
