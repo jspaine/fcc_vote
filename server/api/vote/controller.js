@@ -11,17 +11,10 @@ export default {
       })
   },
   create: async (ctx) => {
-    const vote = await Vote.create({
+    ctx.body = await Vote.create({
       poll: ctx.params.pid,
       option: ctx.params.oid,
       user: ctx.state.user._id
     })
-    ctx.body = await Vote.find()
-      .where({
-        poll: ctx.params.pid,
-        option: ctx.params.oid,
-        user: ctx.state.user._id
-      })
-      .populate('poll option')
   }
 }
