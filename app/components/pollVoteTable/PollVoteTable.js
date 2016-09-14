@@ -2,12 +2,12 @@ import React, {PropTypes, Component} from 'react'
 import Table from 'react-toolbox/lib/table'
 import Button from 'react-toolbox/lib/button'
 
-import style from './PollTable.scss'
+import style from './PollVoteTable.scss'
 
 const optionModel = {
-  title: {type: String},
-  voteCount: {type: String},
-  votePerc: {type: String}
+  option: {type: String},
+  votes: {type: String},
+  '%': {type: String}
 }
 
 export default class extends Component {
@@ -30,38 +30,46 @@ export default class extends Component {
     const optionId = vote[0].option._id
     return this.props.options.findIndex(o => o._id === optionId)
   }
+  getOptionVotes(votes, optionId) {
+    return votes ? votes.filter(v => v.option._id === optionId).length : 0
+  }
   render() {
     const {
       options,
-      totalVotes,
-      large,
+      getTotalVotes,
       canVote,
       saveVote,
       votes,
+      optionVotes,
       userId
     } = this.props
 
-    const data = options.map(option => ({
-      id: option._id,
-      title: option.title,
-      voteCount: option.votes || '0',
-      votePerc: option.votes &&
-        Math.round(option.votes / totalVotes * 100) + ' %'
-    }))
+    const data = options.map(option => {
+      const numVotes = this.getOptionVotes(votes, option._id)
+      const votePerc = numVotes > 0 &&
+          Math.round(numVotes / getTotalVotes() * 100) + ' %'
+
+      return {
+        option: option.title,
+        votes: numVotes.toString(),
+        '%': votePerc
+      }
+    })
 
     return (
       <div>
         <Table
           className={style.table}
-          heading={false}
-          selectable={large}
+          heading
+          selectable
+          multiSelectable={false}
           selected={this.state.selected}
           onSelect={canVote ? this.handleSelect : null}
           model={optionModel}
           source={data}
         />
-        {large && canVote &&
-          (this.state.selected.length > 0) && (this.state.selected[0] !== null) &&
+        {canVote && (this.state.selected.length > 0) &&
+          (this.state.selected[0] !== null) &&
           <Button
             label="Vote!"
             onClick={saveVote(this.props.userId, options[this.state.selected[0]])}
@@ -70,4 +78,4 @@ export default class extends Component {
       </div>
     )
   }
-  }
+}

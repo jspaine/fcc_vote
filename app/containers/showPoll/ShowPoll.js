@@ -6,7 +6,12 @@ import {ProgressBar} from 'react-toolbox/lib/progress_bar'
 import {loadPollsRequest} from 'store/modules/polls'
 import {loadVotesRequest, saveVoteRequest} from 'store/modules/votes'
 import {selectors} from 'store/modules'
-import PollCard from 'components/pollCard/PollCard'
+import {
+  PollCard,
+  PollChart,
+  PollVoteTable,
+  PollVoteList
+} from 'components'
 
 const stateToProps = (state, props) => ({
   poll: selectors.getPollById(state, props.params.id),
@@ -36,21 +41,45 @@ class ShowPoll extends React.Component{
   }
 
   render() {
+    const {
+      poll,
+      votes,
+      canVote,
+      saveVote,
+      userId,
+      pollsLoading,
+      votesLoading
+    } = this.props
+
     return (
       <div>
-        {this.props.pollsLoading &&
+        {pollsLoading &&
           <ProgressBar type="circular" mode="indeterminate" />
         }
-        {this.props.poll &&
+        {poll &&
           <PollCard
-            poll={this.props.poll}
-            votes={this.props.votes}
-            canVote={this.props.canVote}
-            votesLoading={this.props.votesLoading}
-            saveVote={this.props.saveVote}
-            large={true}
-            userId={this.props.userId}
-          />
+            poll={poll}
+            getTotalVotes={() => getTotalVotes(poll, votes)}
+          >
+            <PollVoteTable
+              options={poll.options}
+              getTotalVotes={() => getTotalVotes(poll, votes)}
+              canVote={canVote}
+              saveVote={saveVote}
+              votes={votes}
+              userId={userId}
+            />
+            <PollChart
+              options={poll.options}
+              votes={votes}
+              getTotalVotes={() => getTotalVotes(poll, votes)}
+            />
+            <PollVoteList
+              poll={poll}
+              votes={votes}
+              votesLoading={votesLoading}
+            />
+          </PollCard>
         }
       </div>
     )
@@ -67,3 +96,10 @@ class ShowPoll extends React.Component{
 }
 
 export default connect(stateToProps, dispatchToProps)(ShowPoll)
+
+function getTotalVotes(poll, votes) {
+  if (votes && votes.length) {
+    return votes.length
+  }
+  return poll.options.reduce((acc, x) => acc + x.votes, 0)
+}

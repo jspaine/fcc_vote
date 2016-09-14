@@ -6,7 +6,7 @@ import {Layout, Panel} from 'react-toolbox/lib/layout'
 import {openDrawer} from 'store/modules/ui'
 
 import {Nav} from 'components'
-import NavDrawer from 'containers/navDrawer/NavDrawer'
+import {NavDrawer} from 'containers'
 import style from './App.scss'
 
 const stateToProps = (state) => ({

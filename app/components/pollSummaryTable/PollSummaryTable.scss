@@ -1,0 +1,12 @@
+.table {
+  tr {
+    line-height: 1.8rem;
+    td:first-child {
+      width: 50%;
+    }
+    td:nth-child(2),
+    td:nth-child(3) {
+      text-align: right;
+    }
+  }
+}

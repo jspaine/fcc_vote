@@ -11,6 +11,18 @@ import {
 
 import style from './PollChart.scss'
 
+const colors = [
+  '#1776B6',
+  '#FF7F00',
+  '#D8241F',
+  '#9564BF',
+  '#8D5649',
+  '#E574C3',
+  '#7F7F7F',
+  '#BCBF00',
+  '#00BED1'
+]
+
 class PollChart extends React.Component {
   constructor(props) {
     super(props)
@@ -28,16 +40,23 @@ class PollChart extends React.Component {
   render() {
     return (
       <div>
-        {this.state.chart}
+        {this.graph().toReact()}
       </div>
     )
   }
 
   graph() {
-    const {colors, options, total} = this.props
+    const {votes, getTotalVotes} = this.props
+
+    const options = this.props.options.map(o => ({
+        ...o,
+        votes: votes.filter(v => v.option._id === o._id).length
+      }))
+
+    const total = getTotalVotes()
     const el = new fauxDOM.Element('svg')
     const maxVotes = max(options.map(option =>
-          option.votes || 0))
+          option.votes || 1))
     const optionTitles = options.map(option => option.title)
     const margin = {top: 10, right: 0, bottom: 50, left: 50}
     const width = 300 - margin.left - margin.right
@@ -54,7 +73,6 @@ class PollChart extends React.Component {
     const xAxis = axisBottom()
       .scale(x)
       .tickFormat((d) => '')
-
 
     const yAxis = axisLeft()
       .scale(y)
@@ -113,14 +131,13 @@ class PollChart extends React.Component {
             ''
           })
 
-
     return el
   }
 
   static propTypes = {
     options: PropTypes.array.isRequired,
-    colors: PropTypes.array.isRequired,
-    total: PropTypes.number.isRequired
+    votes: PropTypes.array,
+    getTotalVotes: PropTypes.func.isRequired
   }
 }
 

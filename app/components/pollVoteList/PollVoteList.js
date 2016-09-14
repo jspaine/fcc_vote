@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react'
 import {ProgressBar} from 'react-toolbox/lib/progress_bar'
-import {Card, CardTitle, CardText, CardActions} from 'react-toolbox/lib/card'
 import moment from 'moment'
 
-import style from './PollVotes.scss'
+import style from './PollVoteList.scss'
 
 const PollVotes = ({poll, votes, votesLoading}) =>
   <div>
