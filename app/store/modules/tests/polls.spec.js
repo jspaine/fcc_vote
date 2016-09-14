@@ -109,13 +109,20 @@ describe('polls reducer', function() {
       }
 
       expectEpic(fromPolls.savePollEpic, api, 'post', {
-        expected: ['-a|', {
-          a: {type: 'polls/SAVE_POLL_SUCCESS', ...response}
+        expected: ['-(ab)|', {
+          a: {
+            type: '@@router/CALL_HISTORY_METHOD',
+            payload: {
+              args: ['/polls/1'],
+              method: 'push'
+            }
+          },
+          b: {type: 'polls/SAVE_POLL_SUCCESS', ...response}
         }],
         action: ['(a|)', {
           a: fromPolls.savePollRequest(poll)
         }],
-        response: ['-a|', {
+        response: ['-a---|', {
           a: response
         }],
         fetchArgs: ['api/polls']
@@ -131,13 +138,20 @@ describe('polls reducer', function() {
       }
 
       expectEpic(fromPolls.savePollEpic, api, 'put', {
-        expected: ['-a|', {
-          a: {type: 'polls/SAVE_POLL_SUCCESS', ...response}
+        expected: ['-(ab)|', {
+          a: {
+            type: '@@router/CALL_HISTORY_METHOD',
+            payload: {
+              args: ['/polls/1'],
+              method: 'push'
+            }
+          },
+          b: {type: 'polls/SAVE_POLL_SUCCESS', ...response}
         }],
         action: ['(a|)', {
           a: fromPolls.savePollRequest(poll)
         }],
-        response: ['-a|', {
+        response: ['-a---|', {
           a: response
         }],
         fetchArgs: ['api/polls/1']

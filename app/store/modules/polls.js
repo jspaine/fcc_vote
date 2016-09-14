@@ -1,4 +1,5 @@
 import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/concat'
 import {push} from 'react-router-redux'
 import {denormalize} from 'denormalizr'
 
@@ -142,20 +143,24 @@ export const loadPollsEpic = action$ =>
           data: action.poll,
           schema: schema.poll
         })
-          .map(data => {
-            push(`/polls/${data.result}`)
-            return savePollSuccess(data)
-          })
+          .flatMap(data =>
+            Observable.concat(
+              Observable.of(push(`/polls/${data.result}`)),
+              Observable.of(savePollSuccess(data))
+            )
+          )
           .catch(err => Observable.of(savePollFailure(err)))
       }
       return api.post('api/polls', {
         data: action.poll,
         schema: schema.poll
       })
-        .map(data => {
-          push(`/polls/${data.result}`)
-          return savePollSuccess(data)
-        })
+        .flatMap(data =>
+          Observable.concat(
+            Observable.of(push(`/polls/${data.result}`)),
+            Observable.of(savePollSuccess(data))
+          )
+        )
         .catch(err => Observable.of(savePollFailure(err)))
     })
 
