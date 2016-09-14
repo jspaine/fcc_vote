@@ -1,3 +1,5 @@
+import merge from 'lodash.merge'
+
 const initialState = {
   polls: {},
   options: {},
@@ -7,10 +9,11 @@ const initialState = {
 
 export default (state = initialState, action) => {
   if (action.entities) {
-    return {
-      ...state,
-      ...action.entities
-    }
+    return merge({}, state, action.entities)
+    // {
+    //   ...state,
+    //   ...action.entities
+    // }
   }
   return state
 }
