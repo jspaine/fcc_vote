@@ -77,3 +77,6 @@ export const loginEpic = action$ =>
         return loginSuccess(user)
       }).catch(err => Observable.of(loginFailure(err)))
     )
+
+export const getUserId = auth =>
+  auth.user && auth.user._id

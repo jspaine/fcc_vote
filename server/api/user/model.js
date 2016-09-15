@@ -10,36 +10,45 @@ const authProviders = ['github']
 export const UserSchema = new Schema({
   username: {
     type: String,
-    unique: true
+    default: null
   },
   email: {
     type: String,
     lowercase: true,
-    default: null,
-    unique: true
+    default: null
   },
   role: {
     type: String,
     default: 'user'
   },
+  ip: {
+    type: String,
+    default: null
+  },
   password: {
     type: String,
-    select: false
+    select: false,
+    default: null
   },
   image: {
-    type: String
+    type: String,
+    default: null
   },
-  provider: String
+  provider: {
+    type: String,
+    default: 'local'
+  }
 })
 
 UserSchema.path('email')
   .validate(function(email) {
     if (authProviders.find(p => p === this.provider)) return true
+    if (this.role === 'guest') return true
     return email && email.length
   }, 'Email can\'t be blank')
 
 UserSchema.pre('save', async function(next) {
-  if (this.isModified('password') || this.isNew) {
+  if (this.isModified('password') || this.isNew && this.role !== 'guest') {
     const hash = await crypt.hash(this.password, 10)
     this.password = hash
   }

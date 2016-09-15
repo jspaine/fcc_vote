@@ -18,9 +18,14 @@ export default {
 
   create: async (ctx) => {
     const newUser = new User(ctx.request.body)
-    newUser.provider = 'local'
+    const existingUsers = await User.find({
+      $or: [
+        {username: newUser.username},
+        {email: newUser.email}
+      ]
+    })
 
-    try {
+    if (existingUsers.length === 0) {
       const user = await newUser.save()
       const token = jwt.sign({ _id: user._id, role: user.role}, config.secrets.token)
 
@@ -28,11 +33,16 @@ export default {
         id: user._id,
         token
       }
-    } catch (err) {
+    } else {
       ctx.status = 500
-      if (err.code === 11000) {
-        ctx.body = {error: 'duplicate key'}
-      }
+      const usernames = existingUsers.map(u => u.username)
+      const emails = existingUsers.map(u => u.email)
+      const error = []
+      if (usernames.find(name => name === newUser.username))
+        error.push('username taken')
+      if (emails.find(email => email === newUser.email))
+        error.push('email taken')
+      ctx.body = {error}
     }
   },
 

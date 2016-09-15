@@ -2,14 +2,14 @@ import injector from 'inject?jsonwebtoken&./model!./controller'
 
 const userStub = {
   save: sinon.stub().resolves({
-    _id: 1234, 
+    _id: 1234,
     token: 'abcd'
   }),
   username: 'a user'
 }
 
 const UserStub = sinon.spy(function() { return userStub })
-UserStub.find = sinon.stub().resolves('user list')
+UserStub.find = sinon.stub().resolves([])
 UserStub.findOne = sinon.stub().resolves(userStub)
 UserStub.findOneAndRemove = sinon.stub().resolves('deleted user')
 
@@ -23,19 +23,20 @@ const controller = injector({
 }).default
 
 describe('User controller', function() {
-  
+
   it('queries users', async function() {
     const ctx = {}
     await controller.index(ctx)
     expect(UserStub.find).to.have.been.calledOnce
-    expect(ctx).to.have.property('body', 'user list')
+    expect(ctx).to.have.property('body')
+    expect(ctx.body).to.eql([])
   })
 
   it('creates a new user', async function() {
     const ctx = {
       request: { body: 'request body' }
     }
-    
+
     await controller.create(ctx)
     expect(UserStub).to.have.been.calledWithNew
     expect(userStub.save).to.have.been.calledOnce
@@ -88,7 +89,7 @@ describe('User controller', function() {
     await controller.me(ctx)
     expect(UserStub.findOne)
       .to.have.been.calledWith({_id: 1234})
-    
+
     expect(ctx)
       .to.have.deep.property('body.username', 'a user')
   })

@@ -39,6 +39,10 @@ describe('User api', function() {
     await request.post('/api/users')
       .send(testUser)
       .expect(500)
+      .expect(res => {
+        expect(res.body).to.have.property('error')
+        expect(res.body.error).to.have.length(2)
+      })
   })
 
   it('doesn\'t show user list if unauthorized', async function() {

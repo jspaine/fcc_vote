@@ -1,5 +1,6 @@
 import Vote from './model'
 import Poll from '../poll/model'
+import User from '../user/model'
 
 export default {
   index: async (ctx) => {
@@ -11,10 +12,27 @@ export default {
       })
   },
   create: async (ctx) => {
+    let user
+    const ip = ctx.request.headers['x-forwarded-for'] || ctx.request.ip
+
+    if (ctx.state.user) {
+      user = ctx.state.user
+    } else {
+      user = await User.findOne()
+        .where({ip})
+    }
+
+    if (!user) {
+      user = await User.create({
+        role: 'guest',
+        ip
+      })
+    }
+
     ctx.body = await Vote.create({
       poll: ctx.params.pid,
       option: ctx.params.oid,
-      user: ctx.state.user._id
+      user: user._id
     })
   }
 }

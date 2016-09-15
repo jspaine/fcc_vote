@@ -68,12 +68,18 @@ export default class extends Component {
           model={optionModel}
           source={data}
         />
-        {canVote && (this.state.selected.length > 0) &&
-          (this.state.selected[0] !== null) &&
+        {canVote &&
+          <span>
           <Button
             label="Vote!"
+            disabled={this.state.selected.length < 1 || this.state.selected[0] === null}
             onClick={saveVote(this.props.userId, options[this.state.selected[0]])}
           />
+          <Button
+            label="Add Option"
+            onClick={() => null}
+          />
+          </span>
         }
       </div>
     )

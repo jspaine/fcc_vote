@@ -10,7 +10,7 @@ const PollVotes = ({poll, votes, votesLoading}) =>
     <ul className={style.voteList}>
       {votes && votes.map(vote =>
         <li key={vote.user._id}>
-          <span>{vote.user.username} voted for </span>
+          <span>{vote.user.username || 'anon'} voted for </span>
           <span>{getTitle(poll.options, vote)} </span>
           <span>{moment(vote.at).fromNow()}</span>
         </li>

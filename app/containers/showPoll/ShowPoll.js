@@ -16,8 +16,8 @@ import {
 const stateToProps = (state, props) => ({
   poll: selectors.getPollById(state, props.params.id),
   votes: selectors.getPollVotes(state, props.params.id),
-  canVote: selectors.getCanVote(state, state.auth.user._id, props.params.id),
-  userId: state.auth.user._id,
+  canVote: selectors.getCanVote(state, selectors.getUserId(state), props.params.id),
+  userId: selectors.getUserId(state),
   pollsLoading: selectors.getPollsPending(state),
   votesLoading: selectors.getVotesPending(state)
 })

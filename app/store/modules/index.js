@@ -3,7 +3,7 @@ import {combineEpics} from 'redux-observable'
 import {routerReducer as routing} from 'react-router-redux'
 import {reducer as form} from 'redux-form'
 
-import auth, {loginEpic} from './auth'
+import auth, * as fromAuth from './auth'
 import polls, * as fromPolls from './polls'
 import options, * as fromOptions from './options'
 import votes, * as fromVotes from './votes'
@@ -24,7 +24,7 @@ export const rootReducer = combineReducers({
 })
 
 export const rootEpic = combineEpics(
-  loginEpic,
+  fromAuth.loginEpic,
   fromPolls.loadPollsEpic,
   fromPolls.savePollEpic,
   fromPolls.deletePollEpic,
@@ -52,15 +52,18 @@ export const selectors = {
     return fromVotes.getPollVotes(pollId, state.votes, state.entities)
   },
   getPollTotalVotes(state, pollId) {
-    const poll = state.entities.polls[pollId]
-    console.log('pollTotal', poll)
+    const poll = fromPolls.getPollById(pollId, state.polls, state.entities)
     return poll.options
       .reduce((acc, o) => acc + o.votes, 0)
   },
   getCanVote(state, userId, pollId) {
+    if (!userId) return true
     return fromVotes.getCanVote(userId, pollId, state.votes, state.entities)
   },
   getVotesPending(state) {
     return fromVotes.getIsPending(state.votes)
   },
+  getUserId(state) {
+    return fromAuth.getUserId(state.auth)
+  }
 }

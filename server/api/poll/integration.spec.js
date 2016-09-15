@@ -7,12 +7,12 @@ const request = supertest.agent(app.listen())
 describe('Poll api', function() {
   let user1, user2, admin
 
-  before(async function() { 
+  before(async function() {
     await initDb()
     await User.find({}).remove()
     user1 = await createTestUser('user')
-    user2 = await createTestUser('user2')
-    admin = await createTestUser('admin')
+    // user2 = await createTestUser('user2')
+    // admin = await createTestUser('admin')
   })
   afterEach(async function() {
     await Poll.find().remove()
@@ -21,7 +21,7 @@ describe('Poll api', function() {
     await User.find().remove()
     await resetDb()
   })
-  
+
   it('saves a new poll', async function() {
     await createTestPoll(user1)
   })
@@ -31,7 +31,7 @@ describe('Poll api', function() {
     await request.get('/api/polls')
       .expect(200)
       .expect('Content-Type', /json/)
-      .expect(res => 
+      .expect(res =>
           expect(res.body.length).to.equal(1))
   })
 
@@ -40,12 +40,12 @@ describe('Poll api', function() {
     await request.get(`/api/polls/${poll._id}`)
       .expect(200)
       .expect('Content-Type', /json/)
-      
+
   })
 
   it('updates a poll', async function() {
     const poll = await createTestPoll(user1)
-    
+
     await request.put(`/api/polls/${poll._id}`)
       .set('Authorization', `Bearer ${user1.token}`)
       .send({
@@ -61,7 +61,7 @@ describe('Poll api', function() {
 
   it('deletes a poll', async function() {
     const poll = await createTestPoll(user1)
-    
+
     await request.del(`/api/polls/${poll._id}`)
       .set('Authorization', `Bearer ${user1.token}`)
       .expect(200)
