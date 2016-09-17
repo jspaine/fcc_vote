@@ -12,27 +12,67 @@ export default {
       })
   },
   create: async (ctx) => {
-    let user
     const ip = ctx.request.headers['x-forwarded-for'] || ctx.request.ip
+    const user = await getUser(ctx.state.user, ip)
+    const option = await getOption(ctx.params.pid, ctx.request.body, user)
 
-    if (ctx.state.user) {
-      user = ctx.state.user
-    } else {
-      user = await User.findOne()
-        .where({ip})
-    }
+    // console.log('saving vote', {
+    //   poll: ctx.params.pid,
+    //   option: option._id,
+    //   user: user._id
+    // })
 
-    if (!user) {
-      user = await User.create({
-        role: 'guest',
-        ip
-      })
-    }
-
-    ctx.body = await Vote.create({
+    const vote = await Vote.create({
       poll: ctx.params.pid,
-      option: ctx.params.oid,
+      option: option._id,
       user: user._id
     })
+    // console.log('saved vote', {
+    //   poll: vote.poll,
+    //   option: vote.option,
+    //   user: vote.user
+    // })
+    const populated = await vote.populate('poll user')
+      .execPopulate()
+
+    // console.log('populated vote', {
+    //   poll: populated.poll,
+    //   option: populated.option,
+    //   user: fetchedUser
+    // })
+
+    ctx.body = populated
+  }
+}
+
+async function getUser(user, ip) {
+  if (user) {
+    return user
+  }
+  const userFromIp = await User.findOne()
+    .where({ip})
+  if (userFromIp) {
+    return userFromIp
+  }
+
+  const newUser = await User.create({
+    role: 'guest',
+    ip
+  })
+  return newUser
+}
+
+async function getOption(pollId, option, user) {
+  if (option._id) {
+    return option
+  }
+  if (user.role !== 'guest') {
+    const poll = await Poll.findByIdAndUpdate(pollId, {
+      $push: {
+        options: {title: option.title}
+      }
+    }, {new: true})
+    console.log('poll', poll)
+    return poll.options.find(o => o.title === option.title)
   }
 }

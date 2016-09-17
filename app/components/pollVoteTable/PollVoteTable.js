@@ -1,6 +1,7 @@
 import React, {PropTypes, Component} from 'react'
-import Table from 'react-toolbox/lib/table'
-import Button from 'react-toolbox/lib/button'
+import {Table} from 'react-toolbox/lib/table'
+import {Button} from 'react-toolbox/lib/button'
+import {Input} from 'react-toolbox/lib/input'
 
 import style from './PollVoteTable.scss'
 
@@ -13,15 +14,28 @@ const optionModel = {
 export default class extends Component {
   constructor(props) {
     super(props)
-    this.state = {selected: [this.getUserVote()]}
+    this.state = {
+      selected: [this.getUserVote()],
+      other: ''
+    }
     this.handleSelect = this.handleSelect.bind(this)
+    this.handleOther = this.handleOther.bind(this)
   }
   componentDidUpdate(prevProps) {
     if (prevProps.options === this.props.options) return
     this.setState({selected: [this.getUserVote()]})
   }
+  handleOther(other) {
+    this.setState({
+      selected: [],
+      other
+    })
+  }
   handleSelect(selected) {
-    this.setState({selected})
+    this.setState({
+      selected,
+      other: ''
+    })
   }
   getUserVote() {
     if (!this.props.userId) return null
@@ -69,19 +83,38 @@ export default class extends Component {
           source={data}
         />
         {canVote &&
-          <span>
-          <Button
-            label="Vote!"
-            disabled={this.state.selected.length < 1 || this.state.selected[0] === null}
-            onClick={saveVote(this.props.userId, options[this.state.selected[0]])}
-          />
-          <Button
-            label="Add Option"
-            onClick={() => null}
-          />
-          </span>
+          <div className={style.footer}>
+            <Button
+              label="Vote!"
+              disabled={!canSubmit(this.state)}
+              onClick={saveVote(this.props.userId,
+                selectedOption(options, this.state))}
+            />
+            {userId &&
+              <Input
+                type="text"
+                label="Something Else"
+                value={this.state.other}
+                onChange={this.handleOther}
+              />
+            }
+          </div>
         }
       </div>
     )
   }
+}
+
+function canSubmit(state) {
+  return (state.selected.length > 0 &&
+          state.selected[0] !== null) ||
+        state.other.trim() !== ''
+}
+
+function selectedOption(options, state) {
+  if (state.selected.length > 0 &&
+      state.selected[0] !== null) {
+    return options[state.selected[0]]
+  }
+  return {title: state.other}
 }

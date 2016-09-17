@@ -17,6 +17,8 @@ export default {
 
   create: async (ctx) => {
     const newPoll = new Poll(ctx.request.body)
+    console.log('saving poll', ctx.request.body)
+    console.log('current user', ctx.state.user)
     newPoll.owner = ctx.state.user._id
 
     const poll = await newPoll.save()

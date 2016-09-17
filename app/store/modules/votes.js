@@ -73,11 +73,10 @@ const loadVotesFailure = (error) => ({
   error
 })
 
-export const saveVoteRequest = (pollId, optionId, userId) => ({
+export const saveVoteRequest = (pollId, option, userId) => ({
   type: SAVE_VOTE_REQUEST,
   pollId,
-  optionId,
-  userId
+  option
 })
 
 const saveVoteSuccess = (response) => {
@@ -108,9 +107,10 @@ export const saveVoteEpic = action$ =>
   action$.ofType(SAVE_VOTE_REQUEST)
     .mergeMap(action =>
       api.post(
-        `api/polls/${action.pollId}/votes/${action.optionId}`,
+        `api/polls/${action.pollId}/votes`,
         {
-          data: {}, schema: schema.vote
+          data: action.option,
+          schema: schema.vote
         })
         .map(saveVoteSuccess)
         .catch(err => Observable.of(saveVoteFailure(err)))

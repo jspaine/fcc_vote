@@ -6,6 +6,6 @@ import auth from '../../lib/authService'
 const router = new Router
 
 router.get('/', controller.index)
-router.post('/:oid', controller.create)
+router.post('/', controller.create)
 
 export default router

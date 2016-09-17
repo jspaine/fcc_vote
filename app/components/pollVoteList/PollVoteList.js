@@ -4,7 +4,10 @@ import moment from 'moment'
 
 import style from './PollVoteList.scss'
 
-const PollVotes = ({poll, votes, votesLoading}) =>
+const PollVoteList = ({poll, votes, votesLoading}) => {
+  console.log('PollVoteList poll', poll)
+  console.log('PollVoteList votes', votes)
+  return (
   <div>
     {votesLoading && <ProgressBar type="circular" mode="indeterminate" />}
     <ul className={style.voteList}>
@@ -16,15 +19,15 @@ const PollVotes = ({poll, votes, votesLoading}) =>
         </li>
       )}
     </ul>
-  </div>
+  </div>)}
 
-PollVotes.propTypes = {
+PollVoteList.propTypes = {
   poll: PropTypes.object.isRequired,
   votes: PropTypes.array,
   votesLoading: PropTypes.bool
 }
 
-export default PollVotes
+export default PollVoteList
 
 function getTitle(options, vote) {
   if (!options || !vote.option) return

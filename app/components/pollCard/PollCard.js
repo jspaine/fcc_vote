@@ -10,9 +10,10 @@ const PollCard = ({
   children
 }) =>
   <Card onClick={onPollClick}>
+    {console.log('poll', poll)}
     <CardTitle
       className={style.cardTitle}
-      avatar={poll.owner.image}
+      avatar={poll.owner && poll.owner.image}
       title={poll.title}
       subtitle={poll.description}
     />

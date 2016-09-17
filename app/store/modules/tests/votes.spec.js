@@ -73,12 +73,12 @@ describe('votes reducer', function() {
           a: {type: 'votes/SAVE_VOTE_SUCCESS', ...response}
         }],
         action: ['(a|)', {
-          a: fromVotes.saveVoteRequest('pid', 'oid', 'uid')
+          a: fromVotes.saveVoteRequest('pid', 'oid')
         }],
         response: ['-a|', {
           a: response
         }],
-        fetchArgs: ['api/polls/pid/votes/oid']
+        fetchArgs: ['api/polls/pid/votes']
       })
     })
   })

@@ -17,3 +17,10 @@
 label[data-react-toolbox="checkbox"] {
   height: 100%;
 }
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}

@@ -27,8 +27,7 @@ const dispatchToProps = (dispatch, props) => ({
   loadVotes: () => dispatch(loadVotesRequest(props.params.id)),
   saveVote: (userId, option) => () => dispatch(saveVoteRequest(
     props.params.id,
-    option._id,
-    userId
+    option
   ))
 })
 

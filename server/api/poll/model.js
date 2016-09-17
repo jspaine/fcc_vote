@@ -19,7 +19,7 @@ export const PollSchema = new Schema({
     type: String
   },
   owner: {
-    type: Schema.ObjectId, 
+    type: Schema.ObjectId,
     ref: 'User',
     required: true
   },
