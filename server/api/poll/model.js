@@ -38,4 +38,15 @@ PollSchema.path('options').validate(function(options) {
   return options && options.length >= 2
 }, 'Need at least two options')
 
+PollSchema.path('options').validate(function(options) {
+  return options.reduce((acc, option, i) => {
+    if (acc) {
+      options.some((e, j) =>
+          i !== j &&
+            e.title.toLowerCase() === option.title.toLowerCase()
+      )
+    }
+  }, true)
+}, 'Options must be unique')
+
 export default mongoose.model('Poll', PollSchema)
