@@ -1,6 +1,5 @@
 import gulp from 'gulp'
 import webpack from 'webpack'
-import Server from 'karma/lib/server'
 
 import webpackServer from './webpack.server.config'
 import webpackClient from './webpack.client.config'
@@ -48,11 +47,7 @@ gulp.task('watch-server', (done) => {
 gulp.task('watch-client', ['watch-server'], () => {
   const compiler = webpack(webpackClient)
   new webpackDevServer(compiler, webpackClient.devServer)
-    .listen(webpackClient.devServer.port, () => {
-      // new Server({
-      //   configFile: __dirname + '/karma.conf.js'
-      // }).start()
-    })
+    .listen(webpackClient.devServer.port)
 })
 
 gulp.task('build', ['build-server', 'build-client'])
