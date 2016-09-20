@@ -16,7 +16,17 @@ const config = {
     seed: false
   },
   secrets: {
-    token: 'koa-vote'
+    token: process.env.TOKEN_SECRET || 'koa-vote'
+  },
+  github: {
+    clientID: process.env.GITHUB_ID || '',
+    clientSecret: process.env.GITHUB_SECRET || '',
+    callbackURL: '/auth/github/callback'
+  },
+  twitter: {
+    clientID: process.env.TWITTER_ID || '',
+    clientSecret: process.env.TWITTER_SECRET || '',
+    callbackURL: '/auth/twitter/callback'
   },
   useCookie: false
 }

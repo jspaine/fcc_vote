@@ -6,3 +6,4 @@ typings.json
 .vscode
 .tmp
 server/bundle.js*
+server/config/index.js
