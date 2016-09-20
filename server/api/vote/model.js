@@ -24,7 +24,7 @@ export const VoteSchema = new Schema({
 })
 
 VoteSchema.index({
-  poll: 1, 
+  poll: 1,
   user: 1
 }, {unique: true})
 
