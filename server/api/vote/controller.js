@@ -6,40 +6,26 @@ export default {
   index: async (ctx) => {
     ctx.body = await Vote.find()
       .where({poll: ctx.params.pid})
+      .sort({at: 'desc'})
       .populate('user', {
         username: true,
         image: true
       })
+      .lean()
   },
   create: async (ctx) => {
     const ip = ctx.request.headers['x-forwarded-for'] || ctx.request.ip
     const user = await getUser(ctx.state.user, ip)
     const option = await getOption(ctx.params.pid, ctx.request.body, user)
 
-    // console.log('saving vote', {
-    //   poll: ctx.params.pid,
-    //   option: option._id,
-    //   user: user._id
-    // })
-
     const vote = await Vote.create({
       poll: ctx.params.pid,
       option: option._id,
       user: user._id
     })
-    // console.log('saved vote', {
-    //   poll: vote.poll,
-    //   option: vote.option,
-    //   user: vote.user
-    // })
+
     const populated = await vote.populate('poll user')
       .execPopulate()
-
-    // console.log('populated vote', {
-    //   poll: populated.poll,
-    //   option: populated.option,
-    //   user: fetchedUser
-    // })
 
     ctx.body = populated
   }
@@ -49,8 +35,10 @@ async function getUser(user, ip) {
   if (user) {
     return user
   }
+
   const userFromIp = await User.findOne()
     .where({ip})
+
   if (userFromIp) {
     return userFromIp
   }
@@ -59,6 +47,7 @@ async function getUser(user, ip) {
     role: 'guest',
     ip
   })
+
   return newUser
 }
 

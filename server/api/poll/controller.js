@@ -3,10 +3,13 @@ import Vote from '../vote/model'
 
 export default {
   index: async (ctx) => {
-    const polls = await Poll.find().populate('owner', {
-      username: true,
-      image: true
-    }).lean()
+    const polls = await Poll.find()
+      .sort({created: 'desc'})
+      .populate('owner', {
+        username: true,
+        image: true
+      })
+      .lean()
     ctx.body = await Promise.all(polls.map(async (poll) => {
       return {
         ...poll,
@@ -17,8 +20,6 @@ export default {
 
   create: async (ctx) => {
     const newPoll = new Poll(ctx.request.body)
-    console.log('saving poll', ctx.request.body)
-    console.log('current user', ctx.state.user)
     newPoll.owner = ctx.state.user._id
 
     const poll = await newPoll.save()
