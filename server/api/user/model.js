@@ -37,7 +37,8 @@ export const UserSchema = new Schema({
   provider: {
     type: String,
     default: 'local'
-  }
+  },
+  github: {}
 })
 
 UserSchema.path('email')
@@ -48,6 +49,7 @@ UserSchema.path('email')
   }, 'Email can\'t be blank')
 
 UserSchema.pre('save', async function(next) {
+  if (authProviders.find(p => p === this.provider)) return next()
   if (this.isModified('password') || this.isNew && this.role !== 'guest') {
     const hash = await crypt.hash(this.password, 10)
     this.password = hash

@@ -68,15 +68,15 @@ export const logout = () => {
 
 export const loginEpic = action$ =>
   action$.ofType(LOGIN_REQUEST)
-    .mergeMap(action =>
-      api.post('auth/local', {
+    .mergeMap(action => {
+      return api.post('auth/local', {
         data: action.data
       }).map(user => {
         localStorage.setItem('user', JSON.stringify(user))
         api.addDefaultHeader('Authorization', `Bearer ${user.token}`)
         return loginSuccess(user)
       }).catch(err => Observable.of(loginFailure(err)))
-    )
+    })
 
 export const getUserId = auth =>
   auth.user && auth.user._id

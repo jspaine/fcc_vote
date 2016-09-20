@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {push} from 'react-router-redux'
 import {Input} from 'react-toolbox/lib/input'
 import {Button} from 'react-toolbox/lib/button'
 import {FontIcon} from 'react-toolbox/lib/font_icon'
@@ -35,7 +36,7 @@ class Login extends React.Component {
   }
 
   render() {
-    const {error, onLogin} = this.props
+    const {error, onLogin, github} = this.props
     return (
       <div className={style.loginForm}>
         <h3>Login</h3>
@@ -68,6 +69,9 @@ class Login extends React.Component {
               Log In
             </Button>
           </div>
+          <a href="/auth/github">
+            Log in github
+          </a>
         </form>
       </div>
     )
