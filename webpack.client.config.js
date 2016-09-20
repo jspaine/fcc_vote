@@ -136,14 +136,18 @@ const prod = {
   },
   plugins: [
     new ExtractTextPlugin('[name].[chunkhash].css', { allChunks: true }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false }
-    }),
-    new webpack.optimize.DedupePlugin,
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: { warnings: false }
+    // }),
+    // new webpack.optimize.DedupePlugin,
     // new webpack.optimize.OccurenceOrderPlugin,
     new webpack.DefinePlugin({
       '__DEVELOPMENT__': false,
-      'process.env': { 'NODE_ENV': '"production"'}
+      'process.env': {
+        'HOST': `"${process.env.HOST}"`,
+        'PORT': `"${process.env.PORT}"`,
+        'NODE_ENV': '"production"'
+      }
     }),
     ...common.plugins
   ],

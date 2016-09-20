@@ -12,6 +12,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case LOAD_POLLS_SUCCESS:
     case SAVE_POLL_SUCCESS:
+      if (!action.entities.options) return state
       return {
         ...state,
         ids: new Set([

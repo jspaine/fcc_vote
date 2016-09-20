@@ -4,7 +4,6 @@ import 'rxjs/add/observable/fromPromise'
 
 import config from '../config'
 
-const urlRoot = `//${config.host}:${config.port}/`
 const methods = ['get', 'post', 'put', 'patch', 'del']
 
 export default new class {
@@ -27,7 +26,7 @@ export default new class {
     params.method = method.toUpperCase()
 
     return Observable.fromPromise(
-      fetch(`${urlRoot}${path}`, params)
+      fetch(`/${path}`, params)
         .then(res => {
           if (!res.ok) throw res
           if (params.headers &&

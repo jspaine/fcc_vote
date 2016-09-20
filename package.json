@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "^6.6.0"
+  },
   "scripts": {
-    "start": "gulp build && NODE_ENV=production node server/bundle.js",
+    "postinstall": "gulp build",
+    "start": "node server/bundle.js",
     "dev": "gulp watch",
     "dev:debug": "node-debug --web-port 8088 gulp watch",
     "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.server.test.config.js",

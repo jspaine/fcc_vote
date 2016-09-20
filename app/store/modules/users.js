@@ -26,6 +26,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case LOAD_POLLS_SUCCESS:
+      if (!action.entities.users) return state
       return {
         ...state,
         ids: new Set([
