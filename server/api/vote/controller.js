@@ -55,13 +55,22 @@ async function getOption(pollId, option, user) {
   if (option._id) {
     return option
   }
-  if (user.role !== 'guest') {
-    const poll = await Poll.findByIdAndUpdate(pollId, {
-      $push: {
-        options: {title: option.title}
-      }
-    }, {new: true})
-    console.log('poll', poll)
-    return poll.options.find(o => o.title === option.title)
-  }
+
+  if (user.role === 'guest') return
+
+  const poll = await Poll.findById(pollId)
+  const unique = poll.options.reduce((acc, o) =>
+    acc && o.title !== option.title,
+    true
+  )
+
+  if (!unique) throw new Error('duplicate option')
+
+  const updatedPoll = await Poll.findByIdAndUpdate(pollId, {
+    $push: {
+      options: {title: option.title}
+    }
+  }, {new: true})
+
+  return updatedPoll.options.find(o => o.title === option.title)
 }
