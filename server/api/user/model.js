@@ -5,7 +5,7 @@ import thenifyAll from 'thenify-all'
 const crypt = thenifyAll(bcrypt, {}, ['hash', 'compare'])
 
 const {Schema} = mongoose
-const authProviders = ['github']
+const authProviders = ['github', 'google']
 
 export const UserSchema = new Schema({
   username: {
@@ -38,7 +38,8 @@ export const UserSchema = new Schema({
     type: String,
     default: 'local'
   },
-  github: {}
+  github: {},
+  google: {}
 })
 
 UserSchema.path('email')

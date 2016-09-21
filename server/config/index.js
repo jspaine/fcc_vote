@@ -20,14 +20,14 @@ const config = {
     token: process.env.TOKEN_SECRET || 'koa-vote'
   },
   github: {
-    clientID: process.env.GITHUB_ID || '',
-    clientSecret: process.env.GITHUB_SECRET || '',
+    clientID: process.env.GITHUB_ID || 'test client id',
+    clientSecret: process.env.GITHUB_SECRET || 'test client secret',
     callbackURL: '/auth/github/callback'
   },
-  twitter: {
-    clientID: process.env.TWITTER_ID || '',
-    clientSecret: process.env.TWITTER_SECRET || '',
-    callbackURL: '/auth/twitter/callback'
+  google: {
+    clientID: process.env.GOOGLE_ID || 'test client id',
+    clientSecret: process.env.GOOGLE_SECRET || 'test client secret',
+    callbackURL: '/auth/google/callback'
   },
   useCookie: false
 }
