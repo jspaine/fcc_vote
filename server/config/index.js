@@ -7,6 +7,7 @@ import test from './test'
 const config = {
   port: process.env.PORT || 8000,
   host: process.env.HOST || 'localhost',
+  protocol: process.env.PROTOCOL || 'http',
 
   db: {
     uri: process.env.MONGODB_URI || 'localhost/koa-vote',

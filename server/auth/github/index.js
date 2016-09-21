@@ -6,15 +6,15 @@ import jwt from 'jsonwebtoken'
 import config from '../../config'
 import User from '../../api/user/model'
 
-function setup() {
+function setup(rootUrl) {
   passport.use(new GithubStrategy({
       clientID: config.github.clientID,
       clientSecret: config.github.clientSecret,
-      callbackURL: 'https://vote-23.herokuapp.com' + config.github.callbackURL
+      callbackURL: rootUrl + config.github.callbackURL
     }, async function(accessToken, refreshToken, profile, cb) {
-      console.log('profile', profile)
+      console.log('profile.id', profile.id, profile._json.id)
       try {
-        const user = await User.findOne({'github.id': profile.id})
+        const user = await User.findOne({'github.id': profile._json.id})
         if (!user) {
           const newUser = new User({
             username: profile.username,
@@ -47,6 +47,7 @@ const router = new Router()
       ctx.body = info
     } else {
       const strippedUser = {
+        _id: user._id,
         username: user.username,
         provider: 'github',
         image: user.image,
@@ -58,7 +59,7 @@ const router = new Router()
         ctx.cookies.set('token', token)
         ctx.redirect('/')
       } else {
-        ctx.redirect(`/${token}`)
+        ctx.redirect(`/token/${token}`)
       }
     }
   })(ctx, next))

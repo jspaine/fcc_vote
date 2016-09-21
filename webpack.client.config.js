@@ -26,6 +26,11 @@ const common = {
     publicPath: '/',
     filename: '[name].[hash].js'
   },
+  node: {
+      net: 'empty',
+      tls: 'empty',
+      dns: 'empty'
+    },
   module: {
     loaders: [
       {
@@ -146,6 +151,7 @@ const prod = {
       'process.env': {
         'HOST': `"${process.env.HOST}"`,
         'PORT': `"${process.env.PORT}"`,
+        'PROTOCOL': `"${process.env.PROTOCOL}"`,
         'NODE_ENV': '"production"'
       }
     }),

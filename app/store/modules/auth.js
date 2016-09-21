@@ -1,5 +1,6 @@
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/fromPromise'
+import jwt from 'jsonwebtoken'
 
 import api from '../../lib/apiClient'
 
@@ -57,6 +58,19 @@ const loginFailure = (error) => ({
   type: LOGIN_FAILURE,
   error
 })
+
+export const loginOAuth = (token) => {
+  const user = jwt.decode(token)
+  user.token = token
+  console.log('user loginOAuth', user)
+
+  localStorage.setItem('user', JSON.stringify(user))
+  api.addDefaultHeader('Authorization', `Bearer ${token}`)
+  return {
+    type: LOGIN_SUCCESS,
+    user
+  }
+}
 
 export const logout = () => {
   api.removeDefaultHeader('Authorization')

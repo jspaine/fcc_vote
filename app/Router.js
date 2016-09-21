@@ -24,6 +24,7 @@ export default function() {
           <Route path="login" component={Login} />
           <Route path="polls/new" component={EditPoll} />
           <Route path="polls/:id" component={ShowPoll} />
+          <Route path="token/:token" component={Home} />
         </Route>
       </Router>
     </Provider>
