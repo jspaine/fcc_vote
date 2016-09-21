@@ -36,7 +36,7 @@ class Login extends React.Component {
   }
 
   render() {
-    const {error, onLogin, github} = this.props
+    const {error, onLogin} = this.props
     return (
       <div className={style.loginForm}>
         <h3>Login</h3>
@@ -71,6 +71,9 @@ class Login extends React.Component {
           </div>
           <a href="/auth/github">
             Log in github
+          </a>
+          <a href="/auth/google">
+            Log in google
           </a>
         </form>
       </div>
