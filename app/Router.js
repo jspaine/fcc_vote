@@ -21,12 +21,30 @@ export default function() {
       <Router history={history}>
         <Route path="/" component={App}>
           <IndexRoute component={Home} />
+
+          <Route onEnter={requireLogin}>
+            <Route path="polls/new" component={EditPoll} />
+          </Route>
+
           <Route path="login" component={Login} />
-          <Route path="polls/new" component={EditPoll} />
           <Route path="polls/:id" component={ShowPoll} />
           <Route path="token/:token" component={Home} />
         </Route>
       </Router>
     </Provider>
   )
+}
+
+function requireLogin(nextState, replace, cb) {
+  const {auth: {user}} = store.getState()
+  if (user && user.role !== 'guest') return cb()
+  replace('/')
+  cb()
+}
+
+function requireAdmin(nextState, replace, cb) {
+  const {auth: {user}} = store.getState()
+  if (user && user.role === 'admin') return cb()
+  replace('/')
+  cb()
 }
