@@ -29,6 +29,7 @@ export default function() {
 
           <Route path="login" component={Login} />
           <Route path="polls/:id" component={ShowPoll} />
+          <Route path="polls/by/user/:userId" component={Home} />
           <Route path="token/:token" component={Home} />
 
           <Route onEnter={requireAdmin}>

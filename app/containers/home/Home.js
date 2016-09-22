@@ -27,6 +27,7 @@ const dispatchToProps = dispatch => ({
 class Home extends React.Component {
   constructor(props) {
     super(props)
+    console.log(props.location)
     if (props.params.token) {
       props.login(props.params.token)
       props.pushState('/')
@@ -38,7 +39,12 @@ class Home extends React.Component {
   render() {
     return (
       <div className={style.pollList}>
-        {this.props.polls && this.props.polls.map(poll =>
+        {this.props.polls && this.props.polls.filter(poll =>
+            this.props.params.userId ?
+              poll.owner._id === this.props.params.userId :
+              true
+          )
+          .map(poll =>
           <PollCard
             poll={poll}
             user={this.props.user}

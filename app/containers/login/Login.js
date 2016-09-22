@@ -69,12 +69,17 @@ class Login extends React.Component {
               Log In
             </Button>
           </div>
-          <a href="/auth/github">
-            Log in github
-          </a>
-          <a href="/auth/google">
-            Log in google
-          </a>
+          <div className={style.socialButtons}>
+            Or login with
+            <a href="/auth/github">
+              <i className="fa fa-2x fa-fw fa-github"></i>
+              Github
+            </a>
+            <a href="/auth/google">
+              <i className="fa fa-2x fa-fw fa-google-plus"></i>
+              Google+
+            </a>
+          </div>
         </form>
       </div>
     )
