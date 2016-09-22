@@ -59,8 +59,12 @@ if (env === 'production') {
   app.use(convert(webpackDevProxy(webpackClientConfig.devServer.port)))
 }
 
-if (env !== 'test') {
+if (env === 'production') {
   app.listen(config.port, () => {
+    console.log('server listening on port', config.port)
+  })
+} else if (env === 'development') {
+  app.listen(config.port, '0.0.0.0', () => {
     console.log('server listening on port', config.port)
   })
 }
