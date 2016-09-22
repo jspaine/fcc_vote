@@ -21,6 +21,7 @@ export default (state = initialState, action) => {
         ])
       }
     case DELETE_POLL_SUCCESS:
+      if (!action.entities.options) return state
       const ids = new Set(state.ids)
       Object.keys(action.entities.options)
         .forEach(o => ids.delete(o))

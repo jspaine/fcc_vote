@@ -113,10 +113,11 @@ export const deletePollRequest = (id) => ({
 })
 
 const deletePollSuccess = (response) => {
-  const {result} = response
+  const {result, entities} = response
   return {
     type: DELETE_POLL_SUCCESS,
-    result
+    result,
+    entities
   }
 }
 

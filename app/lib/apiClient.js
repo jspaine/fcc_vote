@@ -24,6 +24,7 @@ export default new class {
     }
     if (data) params.body = JSON.stringify(data)
     params.method = method.toUpperCase()
+    if (params.method === 'DEL') params.method = 'DELETE'
 
     return Observable.fromPromise(
       fetch(`/${path}`, params)

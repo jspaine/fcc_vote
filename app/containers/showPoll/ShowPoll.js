@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Button, IconButton} from 'react-toolbox/lib/button'
 import {ProgressBar} from 'react-toolbox/lib/progress_bar'
 
-import {loadPollsRequest} from 'store/modules/polls'
+import {loadPollsRequest, deletePollRequest} from 'store/modules/polls'
 import {loadVotesRequest, saveVoteRequest} from 'store/modules/votes'
 import {selectors} from 'store/modules'
 import {
@@ -18,12 +18,14 @@ const stateToProps = (state, props) => ({
   votes: selectors.getPollVotes(state, props.params.id),
   canVote: selectors.getCanVote(state, selectors.getUserId(state), props.params.id),
   userId: selectors.getUserId(state),
+  user: state.auth.user,
   pollsLoading: selectors.getPollsPending(state),
   votesLoading: selectors.getVotesPending(state)
 })
 
 const dispatchToProps = (dispatch, props) => ({
   loadPolls: () => dispatch(loadPollsRequest()),
+  deletePoll: (id) => dispatch(deletePollRequest(id)),
   loadVotes: () => dispatch(loadVotesRequest(props.params.id)),
   saveVote: (userId, option) => () => dispatch(saveVoteRequest(
     props.params.id,
@@ -58,7 +60,9 @@ class ShowPoll extends React.Component{
         {poll &&
           <PollCard
             poll={poll}
+            user={this.props.user}
             getTotalVotes={() => getTotalVotes(poll, votes)}
+            onDeleteClick={() => this.props.deletePoll(poll._id)}
           >
             <PollVoteTable
               options={poll.options}

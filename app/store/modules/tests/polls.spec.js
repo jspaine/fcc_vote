@@ -167,7 +167,7 @@ describe('polls reducer', function() {
 
       expectEpic(fromPolls.deletePollEpic, api, 'del', {
         expected: ['-a|', {
-          a: {type: 'polls/DELETE_POLL_SUCCESS', ...response}
+          a: {type: 'polls/DELETE_POLL_SUCCESS', ...response, entities: undefined}
         }],
         action: ['(a|)', {
           a: fromPolls.deletePollRequest(pollId)
