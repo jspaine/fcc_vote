@@ -39,8 +39,8 @@ export default (state = initialState, action) => {
         ...state,
         pending: false,
         ids: new Set([
-          ...state.ids,
-          action.result
+          action.result,
+          ...state.ids
         ])
       }
     case LOAD_VOTES_FAILURE:
