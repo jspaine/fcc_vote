@@ -1,0 +1,17 @@
+@import "~react-toolbox/lib/colors";
+
+.card[data-react-toolbox="card"] {
+  margin: 2rem auto;
+}
+
+.cardSubText {
+  text-align: right;
+  font-size: 1.2rem;
+  color: $palette-grey-500;
+}
+
+.cardTitle {
+  [data-react-toolbox="avatar"] {
+    min-width: 40px;
+  }
+}
