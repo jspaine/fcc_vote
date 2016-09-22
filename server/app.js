@@ -2,6 +2,7 @@ import Koa from 'koa'
 import Router from 'koa-router'
 import bodyparser from 'koa-bodyparser'
 import serve from 'koa-static'
+import compress from 'koa-compress'
 import convert from 'koa-convert'
 import passport from 'koa-passport'
 import koajwt from 'koa-jwt'
@@ -22,6 +23,9 @@ if (config.db.seed) seedDb()
 //if (env === 'test') mongoose.set('debug', true)
 
 const app = new Koa()
+app.use(compress())
+app.use(bodyparser())
+
 if (env !== 'production')
   app.use(async (ctx, next) => {
     try {
@@ -32,8 +36,6 @@ if (env !== 'production')
       ctx.app.emit('error', err, ctx)
     }
   })
-
-app.use(bodyparser())
 
 app.use(koajwt({
   secret: config.secrets.token,
