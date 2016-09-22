@@ -39,7 +39,7 @@ export default class extends Component {
   }
   getUserVote() {
     if (!this.props.userId) return null
-    const vote = this.props.votes.filter(v => v.user._id === this.props.userId)
+    const vote = this.props.votes.filter(v => v.user && v.user._id === this.props.userId)
     if (vote.length !== 1) return null
     const optionId = vote[0].option._id
     return this.props.options.findIndex(o => o._id === optionId)

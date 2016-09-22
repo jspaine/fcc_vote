@@ -48,7 +48,7 @@ export default {
 
   del: async (ctx) => {
     if (ownOrAdmin(ctx.params, ctx.state.user)) {
-      await User.findOneAndRemove({ _id: ctx.params.id })
+      ctx.body = await User.findOneAndRemove({ _id: ctx.params.id })
       ctx.status = 200
     } else {
       ctx.status = 403

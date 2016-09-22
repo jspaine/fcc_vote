@@ -63,6 +63,9 @@ export const selectors = {
   getVotesPending(state) {
     return fromVotes.getIsPending(state.votes)
   },
+  getAllUsers(state) {
+    return fromUsers.getAllUsers(state.users, state.entities)
+  },
   getUserId(state) {
     return fromAuth.getUserId(state.auth)
   }

@@ -12,8 +12,8 @@ const PollVoteList = ({poll, votes, votesLoading}) => {
     {votesLoading && <ProgressBar type="circular" mode="indeterminate" />}
     <ul className={style.voteList}>
       {votes && votes.map(vote =>
-        <li key={vote.user._id}>
-          <span>{vote.user.username || 'anon'} voted for </span>
+        <li key={vote._id}>
+          <span>{getUsername(vote.user)} voted for </span>
           <span>{getTitle(poll.options, vote)} </span>
           <span>{moment(vote.at).fromNow()}</span>
         </li>
@@ -33,4 +33,10 @@ function getTitle(options, vote) {
   if (!options || !vote.option) return
   const res = options.find(o => o._id === vote.option._id)
   if(res) return res.title
+}
+
+function getUsername(user) {
+  if (!user) return '[deleted]'
+  if (!user.username) return 'anonymous'
+  return user.username
 }

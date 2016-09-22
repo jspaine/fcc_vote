@@ -9,7 +9,8 @@ import {
   Home,
   Login,
   EditPoll,
-  ShowPoll
+  ShowPoll,
+  ListUsers
 } from 'containers'
 
 const store = createStore(browserHistory)
@@ -29,6 +30,10 @@ export default function() {
           <Route path="login" component={Login} />
           <Route path="polls/:id" component={ShowPoll} />
           <Route path="token/:token" component={Home} />
+
+          <Route onEnter={requireAdmin}>
+            <Route path="users" component={ListUsers} />
+          </Route>
         </Route>
       </Router>
     </Provider>

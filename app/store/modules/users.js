@@ -1,4 +1,5 @@
 import {Observable} from 'rxjs/Observable'
+import {denormalize} from 'denormalizr'
 
 import api from '../../lib/apiClient'
 import * as schema from '../schema'
@@ -173,3 +174,7 @@ export const deleteUserEpic = action$ =>
         .map(deleteUserSuccess)
         .catch(err => Observable.of(deleteUserFailure(err)))
     )
+
+export function getAllUsers(users, entities) {
+  return denormalize([...users.ids], entities, schema.arrayOfUsers)
+}
