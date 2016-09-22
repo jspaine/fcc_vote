@@ -62,7 +62,6 @@ const loginFailure = (error) => ({
 export const loginOAuth = (token) => {
   const user = jwt.decode(token)
   user.token = token
-  console.log('user loginOAuth', user)
 
   localStorage.setItem('user', JSON.stringify(user))
   api.addDefaultHeader('Authorization', `Bearer ${token}`)

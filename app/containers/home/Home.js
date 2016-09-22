@@ -28,7 +28,6 @@ class Home extends React.Component {
   constructor(props) {
     super(props)
     if (props.params.token) {
-      console.log('login(token)', props.login(props.params.token))
       props.login(props.params.token)
       props.pushState('/')
     }

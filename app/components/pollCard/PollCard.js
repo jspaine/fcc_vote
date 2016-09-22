@@ -13,7 +13,6 @@ const PollCard = ({
   children
 }) =>
   <Card>
-    {console.log('poll', poll)}
     <CardTitle
       onClick={onPollClick}
       className={style.cardTitle}

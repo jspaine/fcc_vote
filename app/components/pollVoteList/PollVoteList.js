@@ -5,8 +5,6 @@ import moment from 'moment'
 import style from './PollVoteList.scss'
 
 const PollVoteList = ({poll, votes, votesLoading}) => {
-  console.log('PollVoteList poll', poll)
-  console.log('PollVoteList votes', votes)
   return (
   <div>
     {votesLoading && <ProgressBar type="circular" mode="indeterminate" />}
