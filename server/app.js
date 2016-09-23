@@ -3,6 +3,8 @@ import Router from 'koa-router'
 import bodyparser from 'koa-bodyparser'
 import serve from 'koa-static'
 import compress from 'koa-compress'
+import conditional from 'koa-conditional-get'
+import etag from 'koa-etag'
 import convert from 'koa-convert'
 import passport from 'koa-passport'
 import koajwt from 'koa-jwt'
@@ -23,6 +25,8 @@ if (config.db.seed) seedDb()
 //if (env === 'test') mongoose.set('debug', true)
 
 const app = new Koa()
+app.use(conditional())
+app.use(etag())
 app.use(compress())
 app.use(bodyparser())
 
