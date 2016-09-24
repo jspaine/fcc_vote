@@ -1,3 +1,8 @@
 .voteList {
   list-style: none;
 }
+.cardTitle {
+  [data-react-toolbox="avatar"] {
+    min-width: 40px;
+  }
+}

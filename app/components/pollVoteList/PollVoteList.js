@@ -14,6 +14,7 @@ const PollVoteList = ({poll, votes, votesLoading}) => {
         <li key={vote._id}>
           <Card>
             <CardTitle
+              className={style.cardTitle}
               avatar={vote.user && vote.user.image ?
                 vote.user.image : 'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50'
               }
