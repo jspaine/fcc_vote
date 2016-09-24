@@ -71,7 +71,7 @@ export default class extends Component {
     })
 
     return (
-      <div>
+      <div className={style.voteTable}>
         <Table
           className={style.table}
           heading

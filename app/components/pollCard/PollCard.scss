@@ -10,8 +10,16 @@
   color: $palette-grey-500;
 }
 
-.cardTitle {
+.cardTitle, .cardTitleClickable {
   [data-react-toolbox="avatar"] {
     min-width: 40px;
   }
+}
+
+.cardTitleClickable {
+  cursor: pointer;
+}
+
+.twitterIcon {
+  margin-right: 6.6px;
 }

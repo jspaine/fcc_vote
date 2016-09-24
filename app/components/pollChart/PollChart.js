@@ -26,15 +26,25 @@ const colors = [
 class PollChart extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {chart: null}
+    this.state = {
+      width: Math.min(window.innerWidth - 100, 430),
+      height: Math.min(window.innerWidth - 100, 430) / 2
+    }
+    this.handleResize = this.handleResize.bind(this)
   }
-
+  handleResize(e) {
+    const size = Math.min(window.innerWidth - 100, 430)
+    this.setState({
+      width: size,
+      height: size / 2
+    })
+  }
   componentDidMount() {
-    this.setState({chart: this.graph().toReact()})
+    window.addEventListener('resize', this.handleResize)
   }
 
-  componentWillReceiveProps() {
-    this.setState({chart: this.graph().toReact()})
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize)
   }
 
   render() {
@@ -59,8 +69,8 @@ class PollChart extends React.Component {
           option.votes || 1))
     const optionTitles = options.map(option => option.title)
     const margin = {top: 10, right: 0, bottom: 50, left: 50}
-    const width = 300 - margin.left - margin.right
-    const height = 200 - margin.top - margin.bottom
+    const width = this.state.width - margin.left - margin.right
+    const height = this.state.height - margin.top - margin.bottom
 
     const x = scaleBand()
       .rangeRound([0, width])
@@ -100,7 +110,7 @@ class PollChart extends React.Component {
       .attr('class', `${style.y} ${style.axis}`)
       .call(yAxis)
       .append('g')
-        .attr('transform', 'translate(-20,70)')
+        .attr('transform', `translate(-20,${height/2})`)
         .append('text')
           .attr('text-anchor', 'middle')
           .attr('transform', 'rotate(-90)')

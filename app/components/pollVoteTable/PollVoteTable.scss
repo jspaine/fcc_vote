@@ -1,9 +1,15 @@
 .table {
   th {
+    text-align: right;
+  }
+  th:nth-child(2) {
     text-align: center;
   }
   tr {
     line-height: 1.8rem;
+    td:first-child {
+      width: 80px;
+    }
     td:nth-child(2) {
       width: 50%;
     }
@@ -23,4 +29,11 @@ label[data-react-toolbox="checkbox"] {
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
+}
+
+.voteTable {
+  flex-shrink: 10;
+  @media screen and (min-width: 960px) {
+    width: 50%;
+  }
 }

@@ -13,6 +13,8 @@ import {
   PollVoteList
 } from 'components'
 
+import style from './ShowPoll.scss'
+
 const stateToProps = (state, props) => ({
   poll: selectors.getPollById(state, props.params.id),
   votes: selectors.getPollVotes(state, props.params.id),
@@ -64,19 +66,21 @@ class ShowPoll extends React.Component{
             getTotalVotes={() => getTotalVotes(poll, votes)}
             onDeleteClick={() => this.props.deletePoll(poll._id)}
           >
-            <PollVoteTable
-              options={poll.options}
-              getTotalVotes={() => getTotalVotes(poll, votes)}
-              canVote={canVote}
-              saveVote={saveVote}
-              votes={votes}
-              userId={userId}
-            />
-            <PollChart
-              options={poll.options}
-              votes={votes}
-              getTotalVotes={() => getTotalVotes(poll, votes)}
-            />
+            <div className={style.dataRow}>
+              <PollVoteTable
+                options={poll.options}
+                getTotalVotes={() => getTotalVotes(poll, votes)}
+                canVote={canVote}
+                saveVote={saveVote}
+                votes={votes}
+                userId={userId}
+              />
+              <PollChart
+                options={poll.options}
+                votes={votes}
+                getTotalVotes={() => getTotalVotes(poll, votes)}
+              />
+            </div>
             <PollVoteList
               poll={poll}
               votes={votes}

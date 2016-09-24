@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react'
 import {ProgressBar} from 'react-toolbox/lib/progress_bar'
+import {Card, CardTitle} from 'react-toolbox/lib/card'
 import moment from 'moment'
 
 import style from './PollVoteList.scss'
@@ -11,9 +12,15 @@ const PollVoteList = ({poll, votes, votesLoading}) => {
     <ul className={style.voteList}>
       {votes && votes.map(vote =>
         <li key={vote._id}>
-          <span>{getUsername(vote.user)} voted for </span>
-          <span>{getTitle(poll.options, vote)} </span>
-          <span>{moment(vote.at).fromNow()}</span>
+          <Card>
+            <CardTitle
+              avatar={vote.user && vote.user.image ?
+                vote.user.image : 'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50'
+              }
+              title={`${getUsername(vote.user)} voted for ${getTitle(poll.options, vote)}`}
+              subtitle={moment(vote.at).fromNow()}
+            />
+            </Card>
         </li>
       )}
     </ul>

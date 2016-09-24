@@ -27,7 +27,6 @@ const dispatchToProps = dispatch => ({
 class Home extends React.Component {
   constructor(props) {
     super(props)
-    console.log(props.location)
     if (props.params.token) {
       props.login(props.params.token)
       props.pushState('/')
@@ -45,19 +44,20 @@ class Home extends React.Component {
               true
           )
           .map(poll =>
-          <PollCard
-            poll={poll}
-            user={this.props.user}
-            key={poll._id}
-            getTotalVotes={(options) => options.reduce((acc, x) =>
-              acc + x.votes, 0
-            )}
-            onPollClick={() => this.props.showPoll(poll._id)}
-            onDeleteClick={() => this.props.deletePoll(poll._id)}
-          >
-            <PollSummaryTable options={poll.options}/>
-          </PollCard>
-        )}
+            <PollCard
+              poll={poll}
+              user={this.props.user}
+              key={poll._id}
+              getTotalVotes={(options) => options.reduce((acc, x) =>
+                acc + x.votes, 0
+              )}
+              onPollClick={() => this.props.showPoll(poll._id)}
+              onDeleteClick={() => this.props.deletePoll(poll._id)}
+            >
+              <PollSummaryTable options={poll.options}/>
+            </PollCard>
+          )
+        }
       </div>
     )
   }

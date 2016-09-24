@@ -76,8 +76,8 @@ class Login extends React.Component {
               Github
             </a>
             <a href="/auth/google">
-              <i className="fa fa-2x fa-fw fa-google-plus"></i>
-              Google+
+              <i className="fa fa-2x fa-fw fa-google"></i>
+              Google
             </a>
           </div>
         </form>
