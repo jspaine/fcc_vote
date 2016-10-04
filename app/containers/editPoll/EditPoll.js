@@ -12,7 +12,6 @@ import style from './EditPoll.scss'
 
 const RenderOptions = ({fields}) =>
   <ul>
-
     {fields.map((option, index) =>
       <li className={style.fieldListItem} key={index}>
         <Field
@@ -31,7 +30,6 @@ const RenderOptions = ({fields}) =>
             }}/>
         }
       </li>
-
     )}
     <li className={style.fieldListItem}>
       <Button
@@ -61,7 +59,6 @@ const EditPoll = ({initialValues, handleSubmit, onSubmit}) =>
             component={RTField}
             type="text"
           />
-
         </div>
         <div className={style.formCol}>
           <FieldArray
@@ -69,7 +66,6 @@ const EditPoll = ({initialValues, handleSubmit, onSubmit}) =>
             component={RenderOptions}
           />
         </div>
-
       </div>
       <Button type="submit" onClick={handleSubmit(onSubmit)} raised primary>
           Ok
@@ -90,6 +86,9 @@ export default connect(
     saving: state.polls.pending
   }),
   dispatch => ({
-    onSubmit: poll => dispatch(savePollRequest(poll))
+    onSubmit: poll => dispatch(savePollRequest({
+      ...poll,
+      options: poll.options.filter(o => o.title !== '')
+    }))
   })
 )(WithForm)
