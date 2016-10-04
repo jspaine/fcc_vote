@@ -1,14 +1,14 @@
 import gulp from 'gulp'
 import uglify from 'gulp-uglify'
 import webpack from 'webpack'
+import nodemon from 'gulp-nodemon'
 
 import webpackServer from './webpack.server.config'
 import webpackClient from './webpack.client.config'
 
-let webpackDevServer, nodemon
+let webpackDevServer
 if (process.env.NODE_ENV !== 'production') {
   webpackDevServer = require('webpack-dev-server')
-  nodemon = require('nodemon')
 }
 
 gulp.task('build-server', (done) => {
@@ -67,5 +67,8 @@ gulp.task('watch', ['watch-server', 'watch-client'], () => {
   nodemon({
     watch: 'server/bundle.js',
     exec: "node ./server/bundle.js & NODE_ENV=test mocha-webpack"
-  }).on('restart', () => console.log('restarting server'))
+  })
 })
+
+// function exitHandler() { process.exit(0) }
+// process.once('SIGINT', exitHandler)
