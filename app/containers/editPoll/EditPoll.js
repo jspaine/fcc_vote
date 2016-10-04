@@ -12,14 +12,7 @@ import style from './EditPoll.scss'
 
 const RenderOptions = ({fields}) =>
   <ul>
-    <li className={style.fieldListItem}>
-      <Button
-        type="button"
-        label="Add Option"
-        accent
-        onClick={() => fields.push({title: ''})}
-      />
-    </li>
+
     {fields.map((option, index) =>
       <li className={style.fieldListItem} key={index}>
         <Field
@@ -38,7 +31,16 @@ const RenderOptions = ({fields}) =>
             }}/>
         }
       </li>
+
     )}
+    <li className={style.fieldListItem}>
+      <Button
+        type="button"
+        label="Add Option"
+        accent
+        onClick={() => fields.push({title: ''})}
+      />
+    </li>
   </ul>
 
 const EditPoll = ({initialValues, handleSubmit, onSubmit}) =>
@@ -59,9 +61,7 @@ const EditPoll = ({initialValues, handleSubmit, onSubmit}) =>
             component={RTField}
             type="text"
           />
-          <Button type="submit" onClick={handleSubmit(onSubmit)} raised primary>
-            Ok
-          </Button>
+
         </div>
         <div className={style.formCol}>
           <FieldArray
@@ -69,7 +69,11 @@ const EditPoll = ({initialValues, handleSubmit, onSubmit}) =>
             component={RenderOptions}
           />
         </div>
+
       </div>
+      <Button type="submit" onClick={handleSubmit(onSubmit)} raised primary>
+          Ok
+        </Button>
     </form>
   </Card>
 
