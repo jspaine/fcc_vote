@@ -37,27 +37,33 @@ class Home extends React.Component {
   }
   render() {
     return (
-      <div className={style.pollList}>
-        {this.props.polls && this.props.polls.filter(poll =>
-            this.props.params.userId ?
-              poll.owner._id === this.props.params.userId :
-              true
-          )
-          .map(poll =>
-            <PollCard
-              poll={poll}
-              user={this.props.user}
-              key={poll._id}
-              getTotalVotes={(options) => options.reduce((acc, x) =>
-                acc + x.votes, 0
-              )}
-              onPollClick={() => this.props.showPoll(poll._id)}
-              onDeleteClick={() => this.props.deletePoll(poll._id)}
-            >
-              <PollSummaryTable options={poll.options}/>
-            </PollCard>
-          )
+      <div>
+        {this.props.params.userId ?
+          <h4>{this.props.user.username}'s Polls</h4> :
+          <h4>All Polls</h4>
         }
+        <div className={style.pollList}>
+          {this.props.polls && this.props.polls.filter(poll =>
+              this.props.params.userId ?
+                poll.owner._id === this.props.params.userId :
+                true
+            )
+            .map(poll =>
+              <PollCard
+                poll={poll}
+                user={this.props.user}
+                key={poll._id}
+                getTotalVotes={(options) => options.reduce((acc, x) =>
+                  acc + x.votes, 0
+                )}
+                onPollClick={() => this.props.showPoll(poll._id)}
+                onDeleteClick={() => this.props.deletePoll(poll._id)}
+              >
+                <PollSummaryTable options={poll.options}/>
+              </PollCard>
+            )
+          }
+        </div>
       </div>
     )
   }
