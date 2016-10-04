@@ -12,7 +12,6 @@ function setup(rootUrl) {
       clientSecret: config.google.clientSecret,
       callbackURL: rootUrl + config.google.callbackURL
     }, async function(accessToken, refreshToken, profile, cb) {
-      console.log('google profile', profile)
       try {
         const user = await User.findOne({'google.id': profile._json.id})
         if (!user) {
@@ -51,6 +50,7 @@ const router = new Router()
       const strippedUser = {
         _id: user._id,
         username: user.username,
+        role: user.role || 'user',
         provider: user.provider,
         image: user.image,
         google: user.google

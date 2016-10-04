@@ -40,6 +40,7 @@ const router = new Router()
       const decoded = jwt.decode(token)
       ctx.body = {
         username: user.username,
+        role: user.role,
         image: user.image,
         token,
         ...decoded

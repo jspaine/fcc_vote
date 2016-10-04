@@ -53,7 +53,6 @@ app.use(apiRoutes.routes())
 
 app.use(async (ctx, next) => {
   if (!ctx.path.match(/\.js(?:on)?$|\.html$|\.(?:s)?css$|\.map$|\.ico$/)) {
-    console.log(ctx.path, ' -> /')
     ctx.path = '/'
   }
   await next()

@@ -12,7 +12,6 @@ function setup(rootUrl) {
       clientSecret: config.github.clientSecret,
       callbackURL: rootUrl + config.github.callbackURL
     }, async function(accessToken, refreshToken, profile, cb) {
-      console.log('profile.id', profile.id, profile._json.id)
       try {
         const user = await User.findOne({'github.id': profile._json.id})
         if (!user) {
@@ -49,6 +48,7 @@ const router = new Router()
       const strippedUser = {
         _id: user._id,
         username: user.username,
+        role: user.role || 'user',
         provider: 'github',
         image: user.image,
         github: user.github
