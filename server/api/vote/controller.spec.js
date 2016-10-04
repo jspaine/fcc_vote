@@ -141,6 +141,7 @@ describe('Vote controller', function() {
 
     expect(UserStub.create).to.have.been.calledWith({
       role: 'guest',
+      provider: null,
       ip: ctx.request.ip
     })
     expect(ctx.body).to.have.property('_id', 1234)

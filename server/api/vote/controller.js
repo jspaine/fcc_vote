@@ -45,6 +45,7 @@ async function getUser(user, ip) {
 
   const newUser = await User.create({
     role: 'guest',
+    provider: null,
     ip
   })
 
